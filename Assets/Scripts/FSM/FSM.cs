@@ -17,8 +17,8 @@ public class FSM : MonoBehaviour
         string test = "";
         IState state_test = null;
         bool value = false;
-        //a for will be needed here. And inside that for we will create all the conditions.
         //first we will need to init all the states.
+        //a for will be needed here. And inside that for we will create all the conditions.
         Conditions[CurrentState].Add(new CCondition(test, state_test, value, value));
     }
 
@@ -36,7 +36,9 @@ public class FSM : MonoBehaviour
         {
             if (Condition.CheckCondition())
             {
+                CurrentState.OnExitState();
                 CurrentState = Condition.GetToState();
+                CurrentState.OnEnterState();
                 break;
             }
         }
