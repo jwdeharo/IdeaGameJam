@@ -105,6 +105,9 @@ public class PlayerController : MonoBehaviour
             case MechanicManager.E_MECHANICS.CUT:
                 Debug.Log("CUUT");
                 break;
+            case MechanicManager.E_MECHANICS.CHARGE_TELEPORT:
+                Debug.Log("TP");
+                break;
         }
     }
 
