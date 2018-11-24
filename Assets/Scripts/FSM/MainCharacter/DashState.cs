@@ -15,7 +15,6 @@ public class DashState : IState {
 
     public void OnEnterState()
     {
-        Debug.Log("Dash state enter");
         //When we enter the state, we find the player's PlayerController and its fsm to send the condition has changed.
 
         if (ThePlayer == null)
@@ -37,6 +36,17 @@ public class DashState : IState {
 
     public void UpdateState()
     {
+        if (DashTime <= 0.0f)
+        {
+            DashTime = StartDashTime;
+            MyFsm.SetFSMCondition("is_dashing", false);
+        }
+        else
+        {
+            DashTime -= Time.deltaTime;
+            Vector3 DashMovement = MyPlayerController.GetDirection() * DashSpeed;
+            MyPlayerController.Move(DashMovement);
+        }
     }
 
     public void OnExitState()
