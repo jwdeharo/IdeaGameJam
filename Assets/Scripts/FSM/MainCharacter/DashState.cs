@@ -38,7 +38,6 @@ public class DashState : IState {
     {
         if (DashTime <= 0.0f)
         {
-            DashTime = StartDashTime;
             MyFsm.SetFSMCondition("is_dashing", false);
         }
         else
