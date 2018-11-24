@@ -7,21 +7,23 @@ public class FSM : MonoBehaviour
 
     //Dictionary that relates each state with its conditions.
     private Dictionary<IState, List<CCondition>> Conditions;
-    
+
     //List of all the states that this FSM has.
     private Dictionary<string, IState> States;
 
     //This stack will allow us to have memory of the last state.
     private List<IState> StackOfStates;
 
+    private bool ConditionChange = false;
+
     // Use this for initialization
     private void Start()
     {
         //In a future it would be cool to have a File Manager that will read
         //from a json.
-        Conditions      = new Dictionary<IState, List<CCondition>>();
-        States          = new Dictionary<string, IState>();
-        StackOfStates   = new List<IState>();
+        Conditions = new Dictionary<IState, List<CCondition>>();
+        States = new Dictionary<string, IState>();
+        StackOfStates = new List<IState>();
     }
 
     // Update is called once per frame
@@ -33,26 +35,21 @@ public class FSM : MonoBehaviour
             StackOfStates[0].UpdateState();
         }
     }
-    
-    public void CheckConditions()
+
+    public void CheckConditions(CCondition aCondition)
     {
-        List<CCondition> ConditionList = GetConditionList(StackOfStates[0]);
-        foreach (CCondition Condition in ConditionList)
+        if (aCondition.CheckCondition())
         {
-            if (Condition.CheckCondition())
+            StackOfStates[0].OnExitState();
+
+            //If the stack on the top is not the same as the condition says, we insert.
+            //If it is the same, we do not insert because we already have it on the stack.
+            if (StackOfStates[0] != aCondition.GetToState())
             {
-                StackOfStates[0].OnExitState();
-
-                //If the stack on the top is not the same as the condition says, we insert.
-                //If it is the same, we do not insert because we already have it on the stack.
-                if (StackOfStates[0] != Condition.GetToState())
-                {
-                    StackOfStates.Insert(0, Condition.GetToState());
-                }
-
-                StackOfStates[0].OnEnterState();
-                break;
+                StackOfStates.Insert(0, aCondition.GetToState());
             }
+
+            StackOfStates[0].OnEnterState();
         }
     }
 
@@ -78,11 +75,13 @@ public class FSM : MonoBehaviour
         List<CCondition> ConditionList = GetConditionList(StackOfStates[0]);
         foreach (CCondition Condition in ConditionList)
         {
+            ConditionChange = false;
             if (Condition.GetName().Equals(aName))
             {
+                ConditionChange = true;
                 Condition.SetValue(aConditionValue);
+                CheckConditions(Condition);
                 //We check the conditions every time we detect some one has been changed.
-                CheckConditions();
                 break;
             }
         }
@@ -91,7 +90,7 @@ public class FSM : MonoBehaviour
     public void AddState(string aName, IState aState)
     {
         if (!States.ContainsKey(aName))
-        { 
+        {
             States[aName] = aState;
         }
 
