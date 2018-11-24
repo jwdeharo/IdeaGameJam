@@ -15,13 +15,14 @@ public class FSM : MonoBehaviour
     private List<IState> StackOfStates;
 
     // Use this for initialization
-    private void Start()
+    private void Awake()
     {
         //In a future it would be cool to have a File Manager that will read
         //from a json.
         Conditions = new Dictionary<IState, List<CCondition>>();
         States = new Dictionary<IState, string>();
         StackOfStates = new List<IState>();
+        Debug.Log(States);
     }
 
     // Update is called once per frame
