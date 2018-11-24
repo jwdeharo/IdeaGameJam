@@ -2,7 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour
+{
+
+    //Enum to know what mechanics are active at the moments
+    private enum E_MECHANICS
+    {
+        DASH = 0,
+
+        NUM_MECHANICS
+    }
 
     //My finite state machine.
     private FSM MyFsmMachine;
@@ -13,10 +22,11 @@ public class PlayerController : MonoBehaviour {
     private MoveState MyMoveState;
     private DashState MyDashState;
     private Vector3 MyDirection;
+    private E_MECHANICS[] MyMechanics;
     public float MoveSpeed = 5.0f;
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start()
     {
         MyController = GetComponent<CharacterController>();
         MyFsmMachine = GetComponent<FSM>();
@@ -44,15 +54,17 @@ public class PlayerController : MonoBehaviour {
         MyFsmMachine.AddCondition(MyMoveState, MoveToDash);
         MyFsmMachine.AddCondition(MyDashState, DashToIdle);
 
+        MyMechanics = new E_MECHANICS[(int)E_MECHANICS.NUM_MECHANICS];
+        MyMechanics[0] = E_MECHANICS.DASH;
+
         MyDirection = Vector3.zero;
     }
 
     private void FixedUpdate()
     {
-        //The UpdateState does not do much yet. 
-        if (InputManager.GetJoystickMovement() != Vector3.zero && MyFsmMachine.GetCurrentState() != "Dash")
+        //If the input is different from 0, then this means that we're moving.
+        if (InputManager.GetJoystickMovement() != Vector3.zero && !MyFsmMachine.IsState("Dash"))
         {
-            //If the input is different from 0, then this means that we're moving.
             MyFsmMachine.SetFSMCondition("is_moving", true);
         }
         else
@@ -62,7 +74,12 @@ public class PlayerController : MonoBehaviour {
 
         if (InputManager.FirstMechanicPressed())
         {
-            MyFsmMachine.SetFSMCondition("is_dashing", true);
+            switch (MyMechanics[0])
+            {
+                case E_MECHANICS.DASH:
+                    MyFsmMachine.SetFSMCondition("is_dashing", true);
+                    break;
+            }
         }
 
     }
