@@ -25,9 +25,6 @@ public class IdleState : IState
         {
             MyFsm = ThePlayer.GetComponent<FSM>();
         }
-
-        MyFsm.SetFSMCondition("is_moving", false);
-        MyFsm.SetFSMCondition("is_dashing", false);
     }
 
     public void UpdateState()

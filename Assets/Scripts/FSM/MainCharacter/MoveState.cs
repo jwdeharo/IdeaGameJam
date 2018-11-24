@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,8 +20,6 @@ public class MoveState : IState
         {
             MyFsm = GameObject.Find("Player").GetComponent<FSM>();
         }
-
-        MyFsm.SetFSMCondition("is_moving", true);
     }
 
     public void UpdateState()

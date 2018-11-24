@@ -32,7 +32,6 @@ public class DashState : IState {
             MyFsm = ThePlayer.GetComponent<FSM>();
         }
 
-        MyFsm.SetFSMCondition("is_dashing", true);
         DashTime = StartDashTime;
     }
 
