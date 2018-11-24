@@ -29,6 +29,7 @@ public class IdleState : IState
 
     public void UpdateState()
     {
+        MyPlayerController.Move(Vector3.zero);
     }
 
     public void OnExitState()

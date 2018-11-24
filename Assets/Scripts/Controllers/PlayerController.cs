@@ -2,24 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour
+{
+
+    //Enum to know what mechanics are active at the moments
+    private enum E_MECHANICS
+    {
+        DASH = 0,
+
+        NUM_MECHANICS
+    }
 
     //My finite state machine.
     private FSM MyFsmMachine;
     //Character controller that will help us to move and detect collisions.
     private CharacterController MyController;
+    public Animator MyAnimator;
 
     private IdleState MyIdleState;
     private MoveState MyMoveState;
     private DashState MyDashState;
     private Vector3 MyDirection;
+    private E_MECHANICS[] MyMechanics;
+    private bool FacingRight;
     public float MoveSpeed = 5.0f;
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start()
     {
-        MyController = GetComponent<CharacterController>();
-        MyFsmMachine = GetComponent<FSM>();
+        MyController    = GetComponent<CharacterController>();
+        MyFsmMachine    = GetComponent<FSM>();
+        MyAnimator = GetComponent<Animator>();
 
         ////We start the states here.
         MyIdleState = new IdleState();
@@ -44,15 +57,18 @@ public class PlayerController : MonoBehaviour {
         MyFsmMachine.AddCondition(MyMoveState, MoveToDash);
         MyFsmMachine.AddCondition(MyDashState, DashToIdle);
 
+        MyMechanics = new E_MECHANICS[(int)E_MECHANICS.NUM_MECHANICS];
+        MyMechanics[0] = E_MECHANICS.DASH;
+
         MyDirection = Vector3.zero;
+        FacingRight = true;
     }
 
     private void FixedUpdate()
     {
-        //The UpdateState does not do much yet. 
-        if (InputManager.GetJoystickMovement() != Vector3.zero && MyFsmMachine.GetCurrentState() != "Dash")
+        //If the input is different from 0, then this means that we're moving.
+        if (InputManager.GetJoystickMovement() != Vector3.zero && !MyFsmMachine.IsState("Dash"))
         {
-            //If the input is different from 0, then this means that we're moving.
             MyFsmMachine.SetFSMCondition("is_moving", true);
         }
         else
@@ -62,16 +78,38 @@ public class PlayerController : MonoBehaviour {
 
         if (InputManager.FirstMechanicPressed())
         {
-            MyFsmMachine.SetFSMCondition("is_dashing", true);
+            switch (MyMechanics[0])
+            {
+                case E_MECHANICS.DASH:
+                    MyFsmMachine.SetFSMCondition("is_dashing", true);
+                    break;
+            }
         }
 
     }
 
     // Each state will call this function and will move according its characteristics.
-    public void Move(Vector3 aMovement)
+    public void Move(Vector3 aMovement, bool aIsDashing = false)
     {
         //This should do the trick.
-        MyController.Move(aMovement * Time.deltaTime * MoveSpeed);
+        float MovementSpeed = 0.0f;
+
+        MovementSpeed = aMovement.x != 0 ? aMovement.x : aMovement.y;
+
+        float MoveSpeedWithDash = MoveSpeed;
+
+        if (!aIsDashing)
+        {
+            MyAnimator.SetFloat("Speed", Mathf.Abs(MovementSpeed));
+        }
+        else
+        {
+            MoveSpeedWithDash = 1.0f;
+        }
+
+        MyController.Move(aMovement * Time.deltaTime * MoveSpeedWithDash);
+
+        Flip((aMovement).normalized.x);
     }
 
     public void SetDirection(Vector3 aDirection)
@@ -82,6 +120,25 @@ public class PlayerController : MonoBehaviour {
     public Vector3 GetDirection()
     {
         return MyDirection;
+    }
+
+    private void Flip(float aFlipX)
+    {
+        if ((aFlipX > 0.0f && !FacingRight) || (aFlipX < 0.0f && FacingRight))
+        {
+            Vector3 MyScale = transform.localScale;
+
+            MyScale.x *= -1.0f;
+
+            transform.localScale = MyScale;
+
+            FacingRight = !FacingRight;
+        }
+    }
+
+    public Animator GetMyAnimator()
+    {
+        return MyAnimator;
     }
 
 }
