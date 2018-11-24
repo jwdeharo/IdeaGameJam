@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour {
     private IdleState MyIdleState;
     private MoveState MyMoveState;
     private DashState MyDashState;
-
+    private Vector3 MyDirection;
     public float MoveSpeed = 5.0f;
 
 	// Use this for initialization
@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour {
         CCondition MoveToIdle = new CCondition("is_moving", MyIdleState, false, false);
         CCondition IdleToDash = new CCondition("is_dashing", MyDashState, true, false);
         CCondition DashToIdle = new CCondition("is_dashing", MyIdleState, false, false);
+        CCondition MoveToDash = new CCondition("is_dashing", MyDashState, true, false);
 
         MyFsmMachine.AddState("Idle", MyIdleState);
         MyFsmMachine.AddState("Move", MyMoveState);
@@ -38,15 +39,18 @@ public class PlayerController : MonoBehaviour {
 
         //This relates the states with their conditions.
         MyFsmMachine.AddCondition(MyIdleState, IdleToMove);
-        MyFsmMachine.AddCondition(MyMoveState, MoveToIdle);
         MyFsmMachine.AddCondition(MyIdleState, IdleToDash);
+        MyFsmMachine.AddCondition(MyMoveState, MoveToIdle);
+        MyFsmMachine.AddCondition(MyMoveState, MoveToDash);
         MyFsmMachine.AddCondition(MyDashState, DashToIdle);
+
+        MyDirection = Vector3.zero;
     }
 
     private void FixedUpdate()
     {
         //The UpdateState does not do much yet. 
-        if (InputManager.GetJoystickMovement() != Vector3.zero)
+        if (InputManager.GetJoystickMovement() != Vector3.zero && MyFsmMachine.GetCurrentState() != "Dash")
         {
             //If the input is different from 0, then this means that we're moving.
             MyFsmMachine.SetFSMCondition("is_moving", true);
@@ -66,8 +70,18 @@ public class PlayerController : MonoBehaviour {
     // Each state will call this function and will move according its characteristics.
     public void Move(Vector3 aMovement)
     {
-        //This should to the trick.
+        //This should do the trick.
         MyController.Move(aMovement * Time.deltaTime * MoveSpeed);
+    }
+
+    public void SetDirection(Vector3 aDirection)
+    {
+        MyDirection = aDirection;
+    }
+
+    public Vector3 GetDirection()
+    {
+        return MyDirection;
     }
 
 }
