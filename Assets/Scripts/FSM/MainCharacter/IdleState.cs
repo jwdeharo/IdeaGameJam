@@ -22,10 +22,6 @@ public class IdleState : IState
             //If the input is different from 0, then this means that we're moving.
             MyFsm.SetFSMCondition("is_moving", true);
         }
-        else
-        {
-            MyFsm.SetFSMCondition("is_moving", false);
-        }
     }
 
     public void OnExitState()
