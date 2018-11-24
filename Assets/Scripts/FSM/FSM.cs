@@ -58,18 +58,19 @@ public class FSM : MonoBehaviour
     public void SetFSMCondition(string aName, bool aConditionValue)
     {
         List<CCondition> ConditionList = GetConditionList(CurrentState);
-
         foreach (CCondition Condition in ConditionList)
         {
             if (Condition.GetName().Equals(aName))
             {
-                Condition.SetValue(aConditionValue);
+                if (Condition.GetValue() != aConditionValue)
+                {
+                    Condition.SetValue(aConditionValue);
+                    //We check the conditions every time we detect some one has been changed.
+                    CheckConditions();
+                }
                 break;
             }
         }
-
-        //We check the conditions every time we detect some one has been changed.
-        CheckConditions();
     }
 
     public void AddState(string aName, IState aState)
