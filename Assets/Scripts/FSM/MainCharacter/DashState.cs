@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DashState : IState {
 
-    private const float DashSpeed = 10.0f;
+    private const float DashSpeed = 20.0f;
     private const float StartDashTime = 0.1f;
 
     private float DashTime;
@@ -44,7 +44,7 @@ public class DashState : IState {
         {
             DashTime -= Time.deltaTime;
             Vector3 DashMovement = MyPlayerController.GetDirection() * DashSpeed;
-            MyPlayerController.Move(DashMovement);
+            MyPlayerController.Move(DashMovement, true);
         }
     }
 

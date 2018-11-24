@@ -17,19 +17,22 @@ public class PlayerController : MonoBehaviour
     private FSM MyFsmMachine;
     //Character controller that will help us to move and detect collisions.
     private CharacterController MyController;
+    public Animator MyAnimator;
 
     private IdleState MyIdleState;
     private MoveState MyMoveState;
     private DashState MyDashState;
     private Vector3 MyDirection;
     private E_MECHANICS[] MyMechanics;
+    private bool FacingRight;
     public float MoveSpeed = 5.0f;
 
     // Use this for initialization
     void Start()
     {
-        MyController = GetComponent<CharacterController>();
-        MyFsmMachine = GetComponent<FSM>();
+        MyController    = GetComponent<CharacterController>();
+        MyFsmMachine    = GetComponent<FSM>();
+        MyAnimator = GetComponent<Animator>();
 
         ////We start the states here.
         MyIdleState = new IdleState();
@@ -58,6 +61,7 @@ public class PlayerController : MonoBehaviour
         MyMechanics[0] = E_MECHANICS.DASH;
 
         MyDirection = Vector3.zero;
+        FacingRight = true;
     }
 
     private void FixedUpdate()
@@ -85,10 +89,27 @@ public class PlayerController : MonoBehaviour
     }
 
     // Each state will call this function and will move according its characteristics.
-    public void Move(Vector3 aMovement)
+    public void Move(Vector3 aMovement, bool aIsDashing = false)
     {
         //This should do the trick.
-        MyController.Move(aMovement * Time.deltaTime * MoveSpeed);
+        float MovementSpeed = 0.0f;
+
+        MovementSpeed = aMovement.x != 0 ? aMovement.x : aMovement.y;
+
+        float MoveSpeedWithDash = MoveSpeed;
+
+        if (!aIsDashing)
+        {
+            MyAnimator.SetFloat("Speed", Mathf.Abs(MovementSpeed));
+        }
+        else
+        {
+            MoveSpeedWithDash = 1.0f;
+        }
+
+        MyController.Move(aMovement * Time.deltaTime * MoveSpeedWithDash);
+
+        Flip((aMovement).normalized.x);
     }
 
     public void SetDirection(Vector3 aDirection)
@@ -99,6 +120,20 @@ public class PlayerController : MonoBehaviour
     public Vector3 GetDirection()
     {
         return MyDirection;
+    }
+
+    private void Flip(float aFlipX)
+    {
+        if ((aFlipX > 0.0f && !FacingRight) || (aFlipX < 0.0f && FacingRight))
+        {
+            Vector3 MyScale = transform.localScale;
+
+            MyScale.x *= -1.0f;
+
+            transform.localScale = MyScale;
+
+            FacingRight = !FacingRight;
+        }
     }
 
 }
