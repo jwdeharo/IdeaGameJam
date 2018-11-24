@@ -21,6 +21,7 @@ public class DashState : IState {
         {
             ThePlayer = GameObject.Find("Player");
         }
+
         if (MyPlayerController == null)
         {
             MyPlayerController = ThePlayer.GetComponent<PlayerController>();
