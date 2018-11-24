@@ -8,10 +8,11 @@ public class PlayerController : MonoBehaviour {
     private FSM MyFsmMachine;
     //Character controller that will help us to move and detect collisions.
     private CharacterController MyController;
-
-    public float MoveSpeed = 5.0f;
     private IdleState MyIdleState;
     private MoveState MyMoveState;
+
+    public float MoveSpeed = 5.0f;
+
 	// Use this for initialization
 	void Start ()
     {
