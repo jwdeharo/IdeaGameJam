@@ -20,7 +20,6 @@ public class MoveState : IState {
         if (InputManager.GetJoystickMovement() == Vector3.zero)
         {
             //If the input is different from 0, then this means that we're moving.
-            Debug.Log("Not moving");
             MyFsm.SetFSMCondition("is_moving", false);
         }
         else
