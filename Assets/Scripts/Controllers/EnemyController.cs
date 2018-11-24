@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour {
+public class EnemyController : MonoBehaviour
+{
 
     private EnemyIdleState MyIdleState;
     private EnemyPatrolState MyPatrolState;
@@ -13,9 +14,9 @@ public class EnemyController : MonoBehaviour {
 
     public float MoveSpeed;
     public string Name;
-    
-	// Use this for initialization
-	void Start ()
+
+    // Use this for initialization
+    void Start()
     {
         MyFsm = GetComponent<FSM>();
         MyController = GetComponent<CharacterController>();
@@ -42,19 +43,19 @@ public class EnemyController : MonoBehaviour {
         MyFsm.AddCondition(MyIdleState, IdleToPatrol);
         MyFsm.AddCondition(MyPatrolState, PatrolToIdle);
     }
-	
-	// Update is called once per frame
-	void Update ()
-    {
-		//In the idle state we wait to start patrolling.
 
-	}
+    // Update is called once per frame
+    void Update()
+    {
+        //In the idle state we wait to start patrolling.
+
+    }
 
     // Each state will call this function and will move according its characteristics.
     public void Move(Vector3 aMovement, bool aIsDashing = false)
     {
         MyController.Move(aMovement * Time.deltaTime * MoveSpeed);
-       // Flip((aMovement).normalized.x);
+        // Flip((aMovement).normalized.x);
     }
 
     public float GetMoveSpeed()
