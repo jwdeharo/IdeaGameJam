@@ -1,18 +1,14 @@
 fileFormatVersion: 2
-guid: 323ab3a1c7fa5374580c7e740e6752c6
+guid: d1a572a5516398c4388d0e0f61cf76af
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Maine_Idle_0
-    21300002: Maine_Idle_1
-    21300004: Maine_Idle_2
-    21300006: Maine_Idle_3
-    21300008: Maine_Idle_4
-    21300010: Maine_Idle_5
-    21300012: Maine_Idle_6
-    21300014: Maine_Idle_7
-    21300016: Maine_Idle_8
-    21300018: Maine_Idle_9
-    21300020: Maine_Idle_10
+    21300000: Door_Open_0
+    21300002: Door_Open_1
+    21300004: Door_Open_2
+    21300006: Door_Open_3
+    21300008: Door_Open_4
+    21300010: Door_Open_5
+    21300012: Door_Open_6
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -106,13 +102,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Maine_Idle_0
+      name: Door_Open_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 150
-        height: 150
+        width: 203
+        height: 163
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -120,19 +116,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 714cabccb9722c54fad47b4693ffdeab
+      spriteID: 3c054569f5e532c46876ad116fcb2b18
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Maine_Idle_1
+      name: Door_Open_1
       rect:
         serializedVersion: 2
-        x: 150
+        x: 203
         y: 0
-        width: 150
-        height: 150
+        width: 203
+        height: 163
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -140,19 +136,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 33f9ecd40e4e01147b46b1d655cb4cea
+      spriteID: e9c8ee2ce78db334ca66b890de77c942
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Maine_Idle_2
+      name: Door_Open_2
       rect:
         serializedVersion: 2
-        x: 300
+        x: 406
         y: 0
-        width: 150
-        height: 150
+        width: 203
+        height: 163
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -160,19 +156,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 37eea77f2d17efa45a65aa01845067eb
+      spriteID: c78e820ef4053c7418cb5d945ec2ef98
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Maine_Idle_3
+      name: Door_Open_3
       rect:
         serializedVersion: 2
-        x: 450
+        x: 609
         y: 0
-        width: 150
-        height: 150
+        width: 203
+        height: 163
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -180,19 +176,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b7ac95db991d5034f8bc8aff7e49da07
+      spriteID: 52ff95ea754ca9d4d8df522bd5ff11d0
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Maine_Idle_4
+      name: Door_Open_4
       rect:
         serializedVersion: 2
-        x: 600
+        x: 812
         y: 0
-        width: 150
-        height: 150
+        width: 203
+        height: 163
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -200,19 +196,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bab6764215db41546b4690bda2dd67f9
+      spriteID: 7cbdba8ffcc87a944828960fa775719f
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Maine_Idle_5
+      name: Door_Open_5
       rect:
         serializedVersion: 2
-        x: 750
+        x: 1015
         y: 0
-        width: 150
-        height: 150
+        width: 203
+        height: 163
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -220,19 +216,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f43710deb892e0346ba40fe0fc5b755a
+      spriteID: 3ecf98150746e5c4681a1b2ae93c940b
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Maine_Idle_6
+      name: Door_Open_6
       rect:
         serializedVersion: 2
-        x: 900
+        x: 1218
         y: 0
-        width: 150
-        height: 150
+        width: 203
+        height: 163
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -240,87 +236,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ea3465d6024fb51439157b9236114dfe
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Maine_Idle_7
-      rect:
-        serializedVersion: 2
-        x: 1050
-        y: 0
-        width: 150
-        height: 150
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: c64255f6751189e4dbe1f41d17d897b7
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Maine_Idle_8
-      rect:
-        serializedVersion: 2
-        x: 1200
-        y: 0
-        width: 150
-        height: 150
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 63d6fa9c6a294ad4aaf3e816d131718f
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Maine_Idle_9
-      rect:
-        serializedVersion: 2
-        x: 1350
-        y: 0
-        width: 150
-        height: 150
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4576251c92b3ace47a0238a7e2786e0d
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Maine_Idle_10
-      rect:
-        serializedVersion: 2
-        x: 1500
-        y: 0
-        width: 150
-        height: 150
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4ff532313f2374944a0d5f74f986e717
+      spriteID: 378b65e09dbbe0a40975e2a27ef8e12a
       vertices: []
       indices: 
       edges: []
@@ -328,7 +244,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: e526976f840fdad4398ed1978f4aa59b
+    spriteID: cf3d1d47ef0c2ea4bb5c0050ff4c44a8
     vertices: []
     indices: 
     edges: []
