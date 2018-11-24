@@ -5,42 +5,60 @@ using UnityEngine;
 public class FSM : MonoBehaviour
 {
 
-    //Current state. In a future we might want to have a stack of it.
-    private IState CurrentState;
     //Dictionary that relates each state with its conditions.
     private Dictionary<IState, List<CCondition>> Conditions;
+    
     //List of all the states that this FSM has.
     private Dictionary<string, IState> States;
+
+    //This stack will allow us to have memory of the last state.
+    private List<IState> StackOfStates;
 
     // Use this for initialization
     private void Start()
     {
         //In a future it would be cool to have a File Manager that will read
         //from a json.
-        Conditions  = new Dictionary<IState, List<CCondition>>();
-        States      = new Dictionary<string, IState>();
+        Conditions      = new Dictionary<IState, List<CCondition>>();
+        States          = new Dictionary<string, IState>();
+        StackOfStates   = new List<IState>();
     }
 
     // Update is called once per frame
     private void FixedUpdate()
     {
-        CurrentState.UpdateState();
-
+        //We always do the update of the state at the top.
+        if (StackOfStates.Count != 0)
+        {
+            StackOfStates[0].UpdateState();
+        }
     }
     
     public void CheckConditions()
     {
-        List<CCondition> ConditionList = GetConditionList(CurrentState);
+        List<CCondition> ConditionList = GetConditionList(StackOfStates[0]);
         foreach (CCondition Condition in ConditionList)
         {
             if (Condition.CheckCondition())
             {
-                CurrentState.OnExitState();
-                CurrentState = Condition.GetToState();
-                CurrentState.OnEnterState();
+                StackOfStates[0].OnExitState();
+
+                //If the stack on the top is not the same as the condition says, we insert.
+                //If it is the same, we do not insert because we already have it on the stack.
+                if (StackOfStates[0] != Condition.GetToState())
+                {
+                    StackOfStates.Insert(0, Condition.GetToState());
+                }
+
+                StackOfStates[0].OnEnterState();
                 break;
             }
         }
+    }
+
+    public void PopState()
+    {
+        StackOfStates.RemoveAt(0);
     }
 
     private List<CCondition> GetConditionList(IState aState)
@@ -57,17 +75,14 @@ public class FSM : MonoBehaviour
 
     public void SetFSMCondition(string aName, bool aConditionValue)
     {
-        List<CCondition> ConditionList = GetConditionList(CurrentState);
+        List<CCondition> ConditionList = GetConditionList(StackOfStates[0]);
         foreach (CCondition Condition in ConditionList)
         {
             if (Condition.GetName().Equals(aName))
             {
-                if (Condition.GetValue() != aConditionValue)
-                {
-                    Condition.SetValue(aConditionValue);
-                    //We check the conditions every time we detect some one has been changed.
-                    CheckConditions();
-                }
+                Condition.SetValue(aConditionValue);
+                //We check the conditions every time we detect some one has been changed.
+                CheckConditions();
                 break;
             }
         }
@@ -80,10 +95,10 @@ public class FSM : MonoBehaviour
             States[aName] = aState;
         }
 
-        if (CurrentState == null)
+        if (StackOfStates.Count == 0)
         {
-            CurrentState = aState;
-            CurrentState.OnEnterState();
+            StackOfStates.Insert(0, aState);
+            StackOfStates[0].OnEnterState();
         }
     }
 
