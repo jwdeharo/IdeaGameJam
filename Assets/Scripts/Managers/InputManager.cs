@@ -28,27 +28,17 @@ public static class InputManager
         MainHorizontal += Input.GetAxis("J_Horizontal");
         MainHorizontal += Input.GetAxis("K_Horizontal");
 
-        if (MainHorizontal != 0.0f)
-        {
-            MainHorizontal = MainHorizontal > 0.0f ? 1.0f : -1.0f;
-        }
-
-        return MainHorizontal;
+        return Mathf.Clamp(MainHorizontal, -1.0f, 1.0f);
     }
 
     public static float GetMainVertical()
     {
         float MainVertical = 0.0f;
 
-        MainVertical += Input.GetAxis("J_Vertical");
+        MainVertical += (Input.GetAxis("J_Vertical") * -1.0f);
         MainVertical += Input.GetAxis("K_Vertical");
-
-        if (MainVertical != 0.0f)
-        {
-            MainVertical = MainVertical > 0.0f ? 1.0f : -1.0f;
-        }
         
-        return MainVertical;
+        return Mathf.Clamp(MainVertical, -1.0f, 1.0f);
     }
 
     public static bool ChangeMechanic(ref float aTriggerSensibility)
