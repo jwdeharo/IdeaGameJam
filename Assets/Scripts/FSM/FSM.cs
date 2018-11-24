@@ -9,7 +9,7 @@ public class FSM : MonoBehaviour
     private Dictionary<IState, List<CCondition>> Conditions;
 
     //List of all the states that this FSM has.
-    private Dictionary<string, IState> States;
+    private Dictionary<IState, string> States;
 
     //This stack will allow us to have memory of the last state.
     private List<IState> StackOfStates;
@@ -20,7 +20,7 @@ public class FSM : MonoBehaviour
         //In a future it would be cool to have a File Manager that will read
         //from a json.
         Conditions = new Dictionary<IState, List<CCondition>>();
-        States = new Dictionary<string, IState>();
+        States = new Dictionary<IState, string>();
         StackOfStates = new List<IState>();
     }
 
@@ -36,7 +36,7 @@ public class FSM : MonoBehaviour
 
     public void CheckConditions(CCondition aCondition)
     {
-        if (aCondition.CheckCondition())
+        if (aCondition != null && aCondition.CheckCondition())
         {
             StackOfStates[0].OnExitState();
 
@@ -72,28 +72,35 @@ public class FSM : MonoBehaviour
     {
         //When we have to set a new value, we set it for all conditions in all states because it is shared.
 
+        CCondition ToCheck = null;
         foreach (KeyValuePair<IState, List<CCondition>> ConditionValuePair in Conditions)
         {
             List<CCondition> ConditionList = ConditionValuePair.Value;
-
+            IState ConditionState = ConditionValuePair.Key;
             foreach (CCondition Condition in ConditionList)
             {
                 if (Condition.GetName().Equals(aName) && Condition.GetValue() != aConditionValue)
                 {
+
                     Condition.SetValue(aConditionValue);
-                    CheckConditions(Condition);
+                    if (ConditionState == StackOfStates[0])
+                    {
+                        ToCheck = Condition;
+                    }
                     //We check the conditions every time we detect some one has been changed.
                     break;
                 }
             }
         }
+
+        CheckConditions(ToCheck);
     }
 
     public void AddState(string aName, IState aState)
     {
-        if (!States.ContainsKey(aName))
+        if (!States.ContainsKey(aState))
         {
-            States[aName] = aState;
+            States[aState] = aName;
         }
 
         if (StackOfStates.Count == 0)
@@ -111,5 +118,17 @@ public class FSM : MonoBehaviour
         }
 
         Conditions[aState].Add(aCondition);
+    }
+
+    public string GetCurrentState()
+    {
+        string CurrentStateStr = "";
+
+        if (States.ContainsKey(StackOfStates[0]))
+        {
+            CurrentStateStr = States[StackOfStates[0]];
+        }
+
+        return CurrentStateStr;
     }
 }
