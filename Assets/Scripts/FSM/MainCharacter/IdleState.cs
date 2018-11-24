@@ -32,7 +32,6 @@ public class IdleState : IState
 
     public void UpdateState()
     {
-        MyPlayerController.SetLastPosition(ThePlayer.transform.position);
     }
 
     public void OnExitState()
