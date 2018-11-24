@@ -59,7 +59,7 @@ public class MechanicManager : MonoBehaviour
 
     public E_MECHANICS[] GetMyMechanics()
     {
-        return MyMechanics;
+        return ActiveMechanics;
     }
 
     public void UpdateLeftMechanic()
