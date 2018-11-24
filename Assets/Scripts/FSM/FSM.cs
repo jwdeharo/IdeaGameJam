@@ -14,8 +14,6 @@ public class FSM : MonoBehaviour
     //This stack will allow us to have memory of the last state.
     private List<IState> StackOfStates;
 
-    private bool ConditionChange = false;
-
     // Use this for initialization
     private void Start()
     {
@@ -72,17 +70,21 @@ public class FSM : MonoBehaviour
 
     public void SetFSMCondition(string aName, bool aConditionValue)
     {
-        List<CCondition> ConditionList = GetConditionList(StackOfStates[0]);
-        foreach (CCondition Condition in ConditionList)
+        //When we have to set a new value, we set it for all conditions in all states because it is shared.
+
+        foreach (KeyValuePair<IState, List<CCondition>> ConditionValuePair in Conditions)
         {
-            ConditionChange = false;
-            if (Condition.GetName().Equals(aName))
+            List<CCondition> ConditionList = ConditionValuePair.Value;
+
+            foreach (CCondition Condition in ConditionList)
             {
-                ConditionChange = true;
-                Condition.SetValue(aConditionValue);
-                CheckConditions(Condition);
-                //We check the conditions every time we detect some one has been changed.
-                break;
+                if (Condition.GetName().Equals(aName) && Condition.GetValue() != aConditionValue)
+                {
+                    Condition.SetValue(aConditionValue);
+                    CheckConditions(Condition);
+                    //We check the conditions every time we detect some one has been changed.
+                    break;
+                }
             }
         }
     }
