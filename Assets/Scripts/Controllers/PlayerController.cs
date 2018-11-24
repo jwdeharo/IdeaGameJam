@@ -71,12 +71,11 @@ public class PlayerController : MonoBehaviour
 
         if (InputManager.FirstMechanicPressed())
         {
-            switch (MyMechanicManager.GetMyMechanics()[0])
-            {
-                case MechanicManager.E_MECHANICS.DASH:
-                    MyFsmMachine.SetFSMCondition("is_dashing", true);
-                    break;
-            }
+            ActivateMechanic(0);
+        }
+        else if (InputManager.SecondMechanicPressed())
+        {
+            ActivateMechanic(1);
         }
 
         if (SensibilityTrigger == 0.0f && InputManager.ChangeMechanic(ref SensibilityTrigger))
@@ -94,8 +93,19 @@ public class PlayerController : MonoBehaviour
         {
             InputManager.ChangeMechanic(ref SensibilityTrigger);
         }
+    }
 
-
+    private void ActivateMechanic(int aMechanicIndex)
+    {
+        switch (MyMechanicManager.GetMyMechanics()[aMechanicIndex])
+        {
+            case MechanicManager.E_MECHANICS.DASH:
+                MyFsmMachine.SetFSMCondition("is_dashing", true);
+                break;
+            case MechanicManager.E_MECHANICS.CUT:
+                Debug.Log("CUUT");
+                break;
+        }
     }
 
     // Each state will call this function and will move according its characteristics.
