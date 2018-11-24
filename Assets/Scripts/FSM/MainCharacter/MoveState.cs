@@ -10,8 +10,17 @@ public class MoveState : IState {
     public void OnEnterState()
     {
         //When we enter the state, we find the player's PlayerController and its fsm to send the condition has changed.
-        MyPlayerController      = GameObject.Find("Player").GetComponent<PlayerController>();
-        MyFsm                   = GameObject.Find("Player").GetComponent<FSM>();
+        if (MyPlayerController == null)
+        {
+            MyPlayerController      = GameObject.Find("Player").GetComponent<PlayerController>();
+        }
+
+        if (MyFsm == null)
+        {
+            MyFsm                   = GameObject.Find("Player").GetComponent<FSM>();
+        }
+
+        MyFsm.SetFSMCondition("is_moving", true);
     }
 
     public void UpdateState()
@@ -30,5 +39,6 @@ public class MoveState : IState {
 
     public void OnExitState()
     {
+        MyFsm.PopState();
     }
 }

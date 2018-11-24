@@ -21,5 +21,7 @@ public class DashState : IState {
 
     public void OnExitState()
     {
+        //In this case, we want to pop from the stack of states and go back to the last state we remember.
+        MyFsm.PopState();
     }
 }
