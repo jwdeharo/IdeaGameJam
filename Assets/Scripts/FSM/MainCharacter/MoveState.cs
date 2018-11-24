@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveState : IState {
+public class MoveState : IState
+{
 
     private PlayerController MyPlayerController;
     private FSM MyFsm;
@@ -12,12 +13,12 @@ public class MoveState : IState {
         //When we enter the state, we find the player's PlayerController and its fsm to send the condition has changed.
         if (MyPlayerController == null)
         {
-            MyPlayerController      = GameObject.Find("Player").GetComponent<PlayerController>();
+            MyPlayerController = GameObject.Find("Player").GetComponent<PlayerController>();
         }
 
         if (MyFsm == null)
         {
-            MyFsm                   = GameObject.Find("Player").GetComponent<FSM>();
+            MyFsm = GameObject.Find("Player").GetComponent<FSM>();
         }
 
         MyFsm.SetFSMCondition("is_moving", true);
@@ -25,16 +26,7 @@ public class MoveState : IState {
 
     public void UpdateState()
     {
-        //The UpdateState does not do much yet. 
-        if (InputManager.GetJoystickMovement() == Vector3.zero)
-        {
-            //If the input is different from 0, then this means that we're moving.
-            MyFsm.SetFSMCondition("is_moving", false);
-        }
-        else
-        {
-            MyPlayerController.Move(InputManager.GetJoystickMovement());
-        }
+        MyPlayerController.Move(InputManager.GetJoystickMovement());
     }
 
     public void OnExitState()
