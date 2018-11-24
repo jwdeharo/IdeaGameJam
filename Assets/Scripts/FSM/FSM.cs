@@ -5,21 +5,18 @@ using UnityEngine;
 public class FSM : MonoBehaviour
 {
 
+    //Current state. In a future we might want to have a stack of it.
     private IState CurrentState;
-    private readonly Dictionary<IState, List<CCondition>> Conditions;
-    private readonly Dictionary<string, IState> States;
-    private readonly string InfoPath;
+    //Dictionary that relates each state with its conditions.
+    private Dictionary<IState, List<CCondition>> Conditions;
+    //List of all the states that this FSM has.
+    private Dictionary<string, IState> States;
 
     // Use this for initialization
     private void Start()
     {
-        //Here we will read our json for the information of the states.
-        string test = "";
-        IState state_test = null;
-        bool value = false;
-        //first we will need to init all the states.
-        //a for will be needed here. And inside that for we will create all the conditions.
-        Conditions[CurrentState].Add(new CCondition(test, state_test, value, value));
+        //In a future it would be cool to have a File Manager that will read
+        //from a json.
     }
 
     // Update is called once per frame
@@ -68,5 +65,10 @@ public class FSM : MonoBehaviour
                 break;
             }
         }
+    }
+
+    public void AddCondition(IState aState, CCondition aCondition)
+    {
+        Conditions[aState].Add(aCondition);
     }
 }
