@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     private IdleState MyIdleState;
     private MoveState MyMoveState;
     private DashState MyDashState;
+    private CutState MyCutState;
     private Vector3 MyDirection;
     private MechanicManager MyMechanicManager;
     private bool FacingRight;
@@ -33,6 +34,7 @@ public class PlayerController : MonoBehaviour
         MyIdleState = new IdleState();
         MyMoveState = new MoveState();
         MyDashState = new DashState();
+        MyCutState  = new CutState();
 
         //We define conditions to change between states here.
         CCondition IdleToMove = new CCondition("is_moving", MyMoveState, true, false);
@@ -40,17 +42,22 @@ public class PlayerController : MonoBehaviour
         CCondition IdleToDash = new CCondition("is_dashing", MyDashState, true, false);
         CCondition DashToIdle = new CCondition("is_dashing", MyIdleState, false, false);
         CCondition MoveToDash = new CCondition("is_dashing", MyDashState, true, false);
+        CCondition IdleToCut = new CCondition("is_cutting", MyCutState, true, false);
+        CCondition CutToIdle = new CCondition("is_cutting", MyIdleState, false, false);
 
-        MyFsmMachine.AddState("Idle", MyIdleState);
-        MyFsmMachine.AddState("Move", MyMoveState);
-        MyFsmMachine.AddState("Dash", MyDashState);
+        MyFsmMachine.AddState("Idle",   MyIdleState);
+        MyFsmMachine.AddState("Move",   MyMoveState);
+        MyFsmMachine.AddState("Dash",   MyDashState);
+        MyFsmMachine.AddState("Cut",    MyCutState);
 
         //This relates the states with their conditions.
         MyFsmMachine.AddCondition(MyIdleState, IdleToMove);
         MyFsmMachine.AddCondition(MyIdleState, IdleToDash);
+        MyFsmMachine.AddCondition(MyIdleState, IdleToCut);
         MyFsmMachine.AddCondition(MyMoveState, MoveToIdle);
         MyFsmMachine.AddCondition(MyMoveState, MoveToDash);
         MyFsmMachine.AddCondition(MyDashState, DashToIdle);
+        MyFsmMachine.AddCondition(MyCutState, CutToIdle);
 
         MyDirection = Vector3.zero;
         FacingRight = true;
@@ -103,7 +110,8 @@ public class PlayerController : MonoBehaviour
                 MyFsmMachine.SetFSMCondition("is_dashing", true);
                 break;
             case MechanicManager.E_MECHANICS.CUT:
-                Debug.Log("CUUT");
+                MyAnimator.SetBool("Is_cutting", true);
+                MyFsmMachine.SetFSMCondition("is_cutting", true);
                 break;
         }
     }
