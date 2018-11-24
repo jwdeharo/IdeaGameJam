@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -30,14 +30,37 @@ public class PlayerController : MonoBehaviour {
         CCondition IdleToMove = new CCondition("is_moving", MyMoveState, true, false);
         CCondition MoveToIdle = new CCondition("is_moving", MyIdleState, false, false);
         CCondition IdleToDash = new CCondition("is_dashing", MyDashState, true, false);
-        
+        CCondition DashToIdle = new CCondition("is_dashing", MyIdleState, false, false);
+
         MyFsmMachine.AddState("Idle", MyIdleState);
         MyFsmMachine.AddState("Move", MyMoveState);
         MyFsmMachine.AddState("Dash", MyDashState);
 
+        //This relates the states with their conditions.
         MyFsmMachine.AddCondition(MyIdleState, IdleToMove);
         MyFsmMachine.AddCondition(MyMoveState, MoveToIdle);
         MyFsmMachine.AddCondition(MyIdleState, IdleToDash);
+        MyFsmMachine.AddCondition(MyDashState, DashToIdle);
+    }
+
+    private void FixedUpdate()
+    {
+        //The UpdateState does not do much yet. 
+        if (InputManager.GetJoystickMovement() != Vector3.zero)
+        {
+            //If the input is different from 0, then this means that we're moving.
+            MyFsmMachine.SetFSMCondition("is_moving", true);
+        }
+        else
+        {
+            MyFsmMachine.SetFSMCondition("is_moving", false);
+        }
+
+        if (InputManager.FirstMechanicPressed())
+        {
+            MyFsmMachine.SetFSMCondition("is_dashing", true);
+        }
+
     }
 
     // Each state will call this function and will move according its characteristics.
@@ -46,4 +69,5 @@ public class PlayerController : MonoBehaviour {
         //This should to the trick.
         MyController.Move(aMovement * Time.deltaTime * MoveSpeed);
     }
+
 }
