@@ -12,6 +12,7 @@ public static class InputManager
 
     public static bool SecondMechanicPressed()
     {
+		
         return Input.GetButtonDown("SecondMechanic");
     }
 
