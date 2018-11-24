@@ -15,7 +15,9 @@ public class PlayerController : MonoBehaviour
     private CutState MyCutState;
     private Vector3 MyDirection;
     private MechanicManager MyMechanicManager;
+    private GameObject ToCut;
     private bool FacingRight;
+    private bool CanCutEnemy;
     private float SensibilityTrigger;
 
     public float MoveSpeed = 5.0f;
@@ -44,7 +46,9 @@ public class PlayerController : MonoBehaviour
         CCondition MoveToDash = new CCondition("is_dashing", MyDashState, true, false);
         CCondition IdleToCut = new CCondition("is_cutting", MyCutState, true, false);
         CCondition CutToIdle = new CCondition("is_cutting", MyIdleState, false, false);
-
+        CCondition CutToMove = new CCondition("is_cutting", MyMoveState, false, false);
+        CCondition MoveToCut = new CCondition("is_cutting", MyCutState, true, false);
+        
         MyFsmMachine.AddState("Idle",   MyIdleState);
         MyFsmMachine.AddState("Move",   MyMoveState);
         MyFsmMachine.AddState("Dash",   MyDashState);
@@ -58,16 +62,18 @@ public class PlayerController : MonoBehaviour
         MyFsmMachine.AddCondition(MyMoveState, MoveToDash);
         MyFsmMachine.AddCondition(MyDashState, DashToIdle);
         MyFsmMachine.AddCondition(MyCutState, CutToIdle);
+        MyFsmMachine.AddCondition(MyMoveState, MoveToCut);
 
         MyDirection = Vector3.zero;
         FacingRight = true;
+        CanCutEnemy = false;
         SensibilityTrigger = 0.0f;
     }
 
     private void FixedUpdate()
     {
         //If the input is different from 0, then this means that we're moving.
-        if (InputManager.GetJoystickMovement() != Vector3.zero && !MyFsmMachine.IsState("Dash"))
+        if (InputManager.GetJoystickMovement() != Vector3.zero && !MyFsmMachine.IsState("Dash") && !MyFsmMachine.IsState("Cut"))
         {
             MyFsmMachine.SetFSMCondition("is_moving", true);
         }
@@ -110,8 +116,11 @@ public class PlayerController : MonoBehaviour
                 MyFsmMachine.SetFSMCondition("is_dashing", true);
                 break;
             case MechanicManager.E_MECHANICS.CUT:
-                MyAnimator.SetBool("Is_cutting", true);
                 MyFsmMachine.SetFSMCondition("is_cutting", true);
+                if (ToCut != null)
+                {
+                    Destroy(ToCut);
+                }
                 break;
         }
     }
@@ -169,4 +178,33 @@ public class PlayerController : MonoBehaviour
         return MyAnimator;
     }
 
+    private void OnTriggerEnter(Collider col)
+    {
+        string ColTag = col.gameObject.transform.parent.gameObject.tag;
+        if (ColTag == "Enemy")
+        {
+            ToCut = col.gameObject.transform.parent.gameObject;
+            CanCutEnemy = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider col)
+    {
+        string ColTag = col.gameObject.transform.parent.gameObject.tag;
+        if (ColTag == "Enemy")
+        {
+            ToCut = null;
+            CanCutEnemy = false;
+        }
+    }
+
+    public bool CanCutEnemyFunc()
+    {
+        return CanCutEnemy;
+    }
+
+    public GameObject GetToCut()
+    {
+        return ToCut;
+    }
 }

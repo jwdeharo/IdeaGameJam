@@ -7,6 +7,7 @@ public class CutState : IState
     private GameObject ThePlayer;
     private FSM MyFsm;
     private CharacterController MyCharacterController;
+    private PlayerController MyPlayerController;
     private Animator MyAnimator;
 
     private float TimeInCut;
@@ -29,20 +30,27 @@ public class CutState : IState
             MyCharacterController = ThePlayer.GetComponent<CharacterController>();
         }
 
+        if (MyPlayerController == null)
+        {
+            MyPlayerController = ThePlayer.GetComponent<PlayerController>();
+        }
+
         if (MyAnimator == null)
         {
             MyAnimator = ThePlayer.GetComponent<Animator>();
         }
 
+        Debug.Log("Bitch");
+        MyAnimator.SetBool("Is_cutting", true);
         AnimatorStateInfo animationState = MyAnimator.GetCurrentAnimatorStateInfo(0);
         AnimatorClipInfo[] myAnimatorClip = MyAnimator.GetCurrentAnimatorClipInfo(0);
         TimeInCut = myAnimatorClip[0].clip.length - 0.3f;
-        Debug.Log(TimeInCut);
     }
 
     public void OnExitState()
     {
         MyAnimator.SetBool("Is_cutting", false);
+        MyFsm.PopState();
     }
 
     public void UpdateState()
