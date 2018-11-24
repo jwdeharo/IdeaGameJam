@@ -17,17 +17,19 @@ public class FSM : MonoBehaviour
     {
         //In a future it would be cool to have a File Manager that will read
         //from a json.
+        Conditions  = new Dictionary<IState, List<CCondition>>();
+        States      = new Dictionary<string, IState>();
     }
 
     // Update is called once per frame
     private void FixedUpdate()
     {
         CurrentState.UpdateState();
-    }
 
-    private void LateUpdate()
+    }
+    
+    public void CheckConditions()
     {
-        //We check conditions here.
         List<CCondition> ConditionList = GetConditionList(CurrentState);
         foreach (CCondition Condition in ConditionList)
         {
@@ -53,7 +55,7 @@ public class FSM : MonoBehaviour
         return ReturnListCondition;
     }
 
-    private void SetFSMCondition(string aName, bool aConditionValue)
+    public void SetFSMCondition(string aName, bool aConditionValue)
     {
         List<CCondition> ConditionList = GetConditionList(CurrentState);
 
@@ -65,10 +67,32 @@ public class FSM : MonoBehaviour
                 break;
             }
         }
+
+        //We check the conditions every time we detect some one has been changed.
+        CheckConditions();
+    }
+
+    public void AddState(string aName, IState aState)
+    {
+        if (!States.ContainsKey(aName))
+        { 
+            States[aName] = aState;
+        }
+
+        if (CurrentState == null)
+        {
+            CurrentState = aState;
+            CurrentState.OnEnterState();
+        }
     }
 
     public void AddCondition(IState aState, CCondition aCondition)
     {
+        if (!Conditions.ContainsKey(aState))
+        {
+            Conditions.Add(aState, new List<CCondition>());
+        }
+
         Conditions[aState].Add(aCondition);
     }
 }
