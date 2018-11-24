@@ -22,7 +22,6 @@ public class FSM : MonoBehaviour
         Conditions = new Dictionary<IState, List<CCondition>>();
         States = new Dictionary<IState, string>();
         StackOfStates = new List<IState>();
-        Debug.Log(States);
     }
 
     // Update is called once per frame
@@ -121,7 +120,7 @@ public class FSM : MonoBehaviour
         Conditions[aState].Add(aCondition);
     }
 
-    public string GetCurrentState()
+    public bool IsState(string aStateName)
     {
         string CurrentStateStr = "";
 
@@ -130,6 +129,6 @@ public class FSM : MonoBehaviour
             CurrentStateStr = States[StackOfStates[0]];
         }
 
-        return CurrentStateStr;
+        return CurrentStateStr == aStateName;
     }
 }

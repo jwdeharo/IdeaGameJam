@@ -45,7 +45,7 @@ public static class InputManager
     {
         float ReturnValue = 0.0f;
 
-        ReturnValue += Input.GetAxis("ChangeMechanic");
+        ReturnValue += Input.GetAxisRaw("ChangeMechanic");
         aTriggerSensibility = ReturnValue;
 
         return ReturnValue != 0.0f || Input.GetButtonDown("ChangeMechanic");

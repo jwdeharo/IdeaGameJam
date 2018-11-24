@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour {
-
+public class PlayerController : MonoBehaviour
+{
     //My finite state machine.
     private FSM MyFsmMachine;
     //Character controller that will help us to move and detect collisions.
@@ -13,13 +13,21 @@ public class PlayerController : MonoBehaviour {
     private MoveState MyMoveState;
     private DashState MyDashState;
     private Vector3 MyDirection;
-    public float MoveSpeed = 5.0f;
+    private MechanicManager MyMechanicManager;
+    private bool FacingRight;
+    private float SensibilityTrigger;
 
-	// Use this for initialization
-	void Start ()
+    public float MoveSpeed = 5.0f;
+    public Animator MyAnimator;
+
+
+    // Use this for initialization
+    void Start()
     {
         MyController = GetComponent<CharacterController>();
         MyFsmMachine = GetComponent<FSM>();
+        MyAnimator = GetComponent<Animator>();
+        MyMechanicManager = GetComponent<MechanicManager>();
 
         ////We start the states here.
         MyIdleState = new IdleState();
@@ -45,14 +53,15 @@ public class PlayerController : MonoBehaviour {
         MyFsmMachine.AddCondition(MyDashState, DashToIdle);
 
         MyDirection = Vector3.zero;
+        FacingRight = true;
+        SensibilityTrigger = 0.0f;
     }
 
     private void FixedUpdate()
     {
-        //The UpdateState does not do much yet. 
-        if (InputManager.GetJoystickMovement() != Vector3.zero && MyFsmMachine.GetCurrentState() != "Dash")
+        //If the input is different from 0, then this means that we're moving.
+        if (InputManager.GetJoystickMovement() != Vector3.zero && !MyFsmMachine.IsState("Dash"))
         {
-            //If the input is different from 0, then this means that we're moving.
             MyFsmMachine.SetFSMCondition("is_moving", true);
         }
         else
@@ -62,16 +71,65 @@ public class PlayerController : MonoBehaviour {
 
         if (InputManager.FirstMechanicPressed())
         {
-            MyFsmMachine.SetFSMCondition("is_dashing", true);
+            ActivateMechanic(0);
+        }
+        else if (InputManager.SecondMechanicPressed())
+        {
+            ActivateMechanic(1);
         }
 
+        if (SensibilityTrigger == 0.0f && InputManager.ChangeMechanic(ref SensibilityTrigger))
+        {
+            if (SensibilityTrigger < 0.0f)
+            {
+                MyMechanicManager.UpdateRightMechanic();
+            }
+            else
+            {
+                MyMechanicManager.UpdateLeftMechanic();
+            }
+        }
+        else
+        {
+            InputManager.ChangeMechanic(ref SensibilityTrigger);
+        }
+    }
+
+    private void ActivateMechanic(int aMechanicIndex)
+    {
+        switch (MyMechanicManager.GetMyMechanics()[aMechanicIndex])
+        {
+            case MechanicManager.E_MECHANICS.DASH:
+                MyFsmMachine.SetFSMCondition("is_dashing", true);
+                break;
+            case MechanicManager.E_MECHANICS.CUT:
+                Debug.Log("CUUT");
+                break;
+        }
     }
 
     // Each state will call this function and will move according its characteristics.
-    public void Move(Vector3 aMovement)
+    public void Move(Vector3 aMovement, bool aIsDashing = false)
     {
         //This should do the trick.
-        MyController.Move(aMovement * Time.deltaTime * MoveSpeed);
+        float MovementSpeed = 0.0f;
+
+        MovementSpeed = aMovement.x != 0 ? aMovement.x : aMovement.y;
+
+        float MoveSpeedWithDash = MoveSpeed;
+
+        if (!aIsDashing)
+        {
+            MyAnimator.SetFloat("Speed", Mathf.Abs(MovementSpeed));
+        }
+        else
+        {
+            MoveSpeedWithDash = 1.0f;
+        }
+
+        MyController.Move(aMovement * Time.deltaTime * MoveSpeedWithDash);
+
+        Flip((aMovement).normalized.x);
     }
 
     public void SetDirection(Vector3 aDirection)
@@ -82,6 +140,25 @@ public class PlayerController : MonoBehaviour {
     public Vector3 GetDirection()
     {
         return MyDirection;
+    }
+
+    private void Flip(float aFlipX)
+    {
+        if ((aFlipX > 0.0f && !FacingRight) || (aFlipX < 0.0f && FacingRight))
+        {
+            Vector3 MyScale = transform.localScale;
+
+            MyScale.x *= -1.0f;
+
+            transform.localScale = MyScale;
+
+            FacingRight = !FacingRight;
+        }
+    }
+
+    public Animator GetMyAnimator()
+    {
+        return MyAnimator;
     }
 
 }
