@@ -136,4 +136,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public Animator GetMyAnimator()
+    {
+        return MyAnimator;
+    }
+
 }
