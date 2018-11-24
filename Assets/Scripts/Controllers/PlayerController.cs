@@ -4,35 +4,30 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
-    //Enum to know what mechanics are active at the moments
-    private enum E_MECHANICS
-    {
-        DASH = 0,
-
-        NUM_MECHANICS
-    }
-
     //My finite state machine.
     private FSM MyFsmMachine;
     //Character controller that will help us to move and detect collisions.
     private CharacterController MyController;
-    public Animator MyAnimator;
 
     private IdleState MyIdleState;
     private MoveState MyMoveState;
     private DashState MyDashState;
     private Vector3 MyDirection;
-    private E_MECHANICS[] MyMechanics;
+    private MechanicManager MyMechanicManager;
     private bool FacingRight;
+    private float SensibilityTrigger;
+
     public float MoveSpeed = 5.0f;
+    public Animator MyAnimator;
+
 
     // Use this for initialization
     void Start()
     {
-        MyController    = GetComponent<CharacterController>();
-        MyFsmMachine    = GetComponent<FSM>();
+        MyController = GetComponent<CharacterController>();
+        MyFsmMachine = GetComponent<FSM>();
         MyAnimator = GetComponent<Animator>();
+        MyMechanicManager = GetComponent<MechanicManager>();
 
         ////We start the states here.
         MyIdleState = new IdleState();
@@ -57,11 +52,9 @@ public class PlayerController : MonoBehaviour
         MyFsmMachine.AddCondition(MyMoveState, MoveToDash);
         MyFsmMachine.AddCondition(MyDashState, DashToIdle);
 
-        MyMechanics = new E_MECHANICS[(int)E_MECHANICS.NUM_MECHANICS];
-        MyMechanics[0] = E_MECHANICS.DASH;
-
         MyDirection = Vector3.zero;
         FacingRight = true;
+        SensibilityTrigger = 0.0f;
     }
 
     private void FixedUpdate()
@@ -78,14 +71,41 @@ public class PlayerController : MonoBehaviour
 
         if (InputManager.FirstMechanicPressed())
         {
-            switch (MyMechanics[0])
-            {
-                case E_MECHANICS.DASH:
-                    MyFsmMachine.SetFSMCondition("is_dashing", true);
-                    break;
-            }
+            ActivateMechanic(0);
+        }
+        else if (InputManager.SecondMechanicPressed())
+        {
+            ActivateMechanic(1);
         }
 
+        if (SensibilityTrigger == 0.0f && InputManager.ChangeMechanic(ref SensibilityTrigger))
+        {
+            if (SensibilityTrigger < 0.0f)
+            {
+                MyMechanicManager.UpdateRightMechanic();
+            }
+            else
+            {
+                MyMechanicManager.UpdateLeftMechanic();
+            }
+        }
+        else
+        {
+            InputManager.ChangeMechanic(ref SensibilityTrigger);
+        }
+    }
+
+    private void ActivateMechanic(int aMechanicIndex)
+    {
+        switch (MyMechanicManager.GetMyMechanics()[aMechanicIndex])
+        {
+            case MechanicManager.E_MECHANICS.DASH:
+                MyFsmMachine.SetFSMCondition("is_dashing", true);
+                break;
+            case MechanicManager.E_MECHANICS.CUT:
+                Debug.Log("CUUT");
+                break;
+        }
     }
 
     // Each state will call this function and will move according its characteristics.
