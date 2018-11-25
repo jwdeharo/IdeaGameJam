@@ -104,7 +104,7 @@ public class EnemyController : MonoBehaviour
             CopiedMechanics.Add(PlayerMechanics.GetMoreUsedMechanic());
         }
 
-        if (CopiedMechanics.Count > 0)
+        if (PlayerMechanics.GetMyMechanics().Length > 1 && CopiedMechanics.Count > 0)
         {
             int RandomIndex = Random.Range(0, CopiedMechanics.Count);
             int RandomValue = Random.Range(0, 10000);
@@ -114,7 +114,6 @@ public class EnemyController : MonoBehaviour
                 switch (CopiedMechanics[RandomIndex])
                 {
                     case MechanicManager.E_MECHANICS.DASH:
-                        Debug.Log("Dash");
                         MyFsm.SetFSMCondition("is_dashing", true);
                         break;
                     case MechanicManager.E_MECHANICS.CUT:
