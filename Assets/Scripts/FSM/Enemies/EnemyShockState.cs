@@ -39,7 +39,7 @@ public class EnemyShockState : EnemyBaseState, IState
 
     public void OnExitState()
     {
-
+        MyFsm.PopState();
     }
 
     public void UpdateState()
@@ -50,9 +50,12 @@ public class EnemyShockState : EnemyBaseState, IState
         {
             FSM PlayerFSM = ThePlayer.GetComponent<FSM>();
 
-            PlayerFSM.SetFSMCondition("is_stunned", true);
-            HasBeenStunned = true;
-            Timer = 2.0f;
+            if (!PlayerFSM.IsState("Dash"))
+            {
+                PlayerFSM.SetFSMCondition("is_stunned", true);
+                HasBeenStunned = true;
+                Timer = 2.0f;
+            }
         }
         else if (HasBeenStunned)
         {

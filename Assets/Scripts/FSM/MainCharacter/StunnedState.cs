@@ -35,9 +35,8 @@ public class StunnedState : IState
 
     public void OnExitState()
     {
-        Debug.Log("Chao pescao");
-        MyAnimator.SetBool("stunned", false);
         MyFsm.PopState();
+        MyAnimator.SetBool("stunned", false);
     }
 
     public void UpdateState()
