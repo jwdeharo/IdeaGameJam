@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : BaseController
 {
 
 
@@ -68,44 +68,51 @@ public class PlayerController : MonoBehaviour
         CCondition IdleToShoot = new CCondition("is_shooting", MyShootingState, true, false);
         CCondition ShootToIdle = new CCondition("is_shooting", MyIdleState, false, false);
         CCondition MoveToShoot = new CCondition("is_shooting", MyShootingState, true, false);
+        CCondition ShootToMove = new CCondition("is_shooting", MyShootingState, true, false);
         CCondition IdleToShootSlow = new CCondition("is_shootingSlow", MyShootingStateSlow, true, false);
         CCondition ShootSlowToIdle = new CCondition("is_shootingSlow", MyIdleState, false, false);
         CCondition MoveToShootSlow = new CCondition("is_shootingSlow", MyShootingStateSlow, true, false);
-
-        MyFsmMachine.AddState("Idle",   MyIdleState);
-        MyFsmMachine.AddState("Move",   MyMoveState);
-        MyFsmMachine.AddState("Dash",   MyDashState);
-        MyFsmMachine.AddState("Cut",    MyCutState);
-        MyFsmMachine.AddState("TP",    MyTeleportState);
-        MyFsmMachine.AddState("Shoot",    MyShootingState);
-        MyFsmMachine.AddState("ShootSlow",    MyShootingStateSlow);
+        CCondition ShootSlowToMove = new CCondition("is_shootingSlow", MyMoveState, false, false);
         CCondition IdleToStunned = new CCondition("is_stunned", MyStunnedState, true, false);
         CCondition MoveToStunned = new CCondition("is_stunned", MyStunnedState, true, false);
         CCondition CutToStunned = new CCondition("is_stunned", MyStunnedState, true, false);
-        CCondition StunnedToIdle = new CCondition("is_stunned", MyMoveState, false, false);
+        CCondition StunnedToIdle = new CCondition("is_stunned", MyIdleState, false, false);
 
         MyFsmMachine.AddState("Idle", MyIdleState);
         MyFsmMachine.AddState("Move", MyMoveState);
         MyFsmMachine.AddState("Dash", MyDashState);
         MyFsmMachine.AddState("Cut", MyCutState);
         MyFsmMachine.AddState("Stunned", MyStunnedState);
+        MyFsmMachine.AddState("TP", MyTeleportState);
+        MyFsmMachine.AddState("Shoot", MyShootingState);
+        MyFsmMachine.AddState("ShootSlow", MyShootingStateSlow);
 
         //This relates the states with their conditions.
         MyFsmMachine.AddCondition(MyIdleState, IdleToMove);
         MyFsmMachine.AddCondition(MyIdleState, IdleToDash);
         MyFsmMachine.AddCondition(MyIdleState, IdleToCut);
         MyFsmMachine.AddCondition(MyIdleState, IdleToStunned);
+        MyFsmMachine.AddCondition(MyIdleState, IdleToShootSlow);
+        MyFsmMachine.AddCondition(MyIdleState, IdleToShoot);
+
         MyFsmMachine.AddCondition(MyMoveState, MoveToIdle);
         MyFsmMachine.AddCondition(MyMoveState, MoveToDash);
         MyFsmMachine.AddCondition(MyMoveState, MoveToCut);
         MyFsmMachine.AddCondition(MyMoveState, MoveToStunned);
+        MyFsmMachine.AddCondition(MyMoveState, MoveToShootSlow);
+        MyFsmMachine.AddCondition(MyMoveState, MoveToShoot);
+
         MyFsmMachine.AddCondition(MyDashState, DashToIdle);
         MyFsmMachine.AddCondition(MyCutState, CutToIdle);
         MyFsmMachine.AddCondition(MyStunnedState, StunnedToIdle);
-        MyFsmMachine.AddCondition(MyIdleState, IdleToShootSlow);
+
         MyFsmMachine.AddCondition(MyShootingStateSlow, ShootSlowToIdle);
-        MyFsmMachine.AddCondition(MyMoveState, MoveToShootSlow);
+        MyFsmMachine.AddCondition(MyShootingStateSlow, ShootSlowToMove);
+
         MyFsmMachine.AddCondition(MyCutState, CutToStunned);
+
+        MyFsmMachine.AddCondition(MyShootingState, ShootToIdle);
+        MyFsmMachine.AddCondition(MyShootingState, ShootToMove);
 
         MyDirection = Vector3.zero;
         FacingRight = true;
@@ -114,22 +121,18 @@ public class PlayerController : MonoBehaviour
         SensibilityTrigger = 0.0f;
         Timer = 0.0f;
     }
-
-    internal void Shoot(GameObject bullet, Vector3 directionOfShooting)
-    {
-
-        Debug.Log(directionOfShooting);
-        GameObject instance = Instantiate(bullet, transform.position, Quaternion.identity);
-        instance.GetComponent<Bullet>().direction = directionOfShooting;
-        Physics.IgnoreCollision(GetComponentInChildren<SphereCollider>(), 
-            instance.GetComponent<Collider>());
-    }
-
+    
     private void FixedUpdate()
     {
+        if (DataManager.CurrentMechanic != MechanicManager.E_MECHANICS.NONE_MECHANIC)
+        {
+            Debug.Log(DataManager.CurrentMechanic);
+            MyMechanicManager.UnlockMechanic(DataManager.CurrentMechanic);
+            DataManager.CurrentMechanic = MechanicManager.E_MECHANICS.NONE_MECHANIC;
+        }
 
         //If the input is different from 0, then this means that we're moving.
-        if (InputManager.GetJoystickMovement() != Vector3.zero && !MyFsmMachine.IsState("Dash") && !MyFsmMachine.IsState("Cut") && !MyFsmMachine.IsState("Stunned"))
+        if (InputManager.GetJoystickMovement() != Vector3.zero && !MyFsmMachine.IsState("Dash") && !MyFsmMachine.IsState("Cut") && !MyFsmMachine.IsState("Stunned") && !MyFsmMachine.IsState("Shoot"))
         {
             MyFsmMachine.SetFSMCondition("is_moving", true);
         }
@@ -173,8 +176,8 @@ public class PlayerController : MonoBehaviour
 
     private void ActivateMechanic(int aMechanicIndex)
     {
-        MyMechanicManager.MechanicUsed((MechanicManager.E_MECHANICS)aMechanicIndex);
-
+        
+        MyMechanicManager.MechanicUsed(MechanicManager.GetCurrentMechanic(aMechanicIndex));
         switch (MyMechanicManager.GetMyMechanics()[aMechanicIndex])
         {
             case MechanicManager.E_MECHANICS.DASH:
@@ -192,7 +195,6 @@ public class PlayerController : MonoBehaviour
                         EnemyFsm.SetFSMCondition("time_to_die", true);
                     }
                 }
-                Debug.Log("CUUT");
                 break;
             case MechanicManager.E_MECHANICS.CHARGE_TELEPORT:
                 MyFsmMachine.SetFSMCondition("is_tping", true);

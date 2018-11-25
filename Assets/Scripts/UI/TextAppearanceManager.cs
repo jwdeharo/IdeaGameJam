@@ -6,16 +6,15 @@ using UnityEngine;
 public class TextAppearanceManager : MonoBehaviour {
 
     public float speed;
+    public string sentence;
+    public GameObject title;
 
     int index;
     bool lineIsFinished,hold;
     WaitForSeconds waitingTime;
     Text text;
-    public string sentence;
     float waitTime;
     
-    //private DialogueNavigation dialogueScript; 
-
     private void Start()
     {
         text = GetComponent<Text>();
@@ -35,24 +34,19 @@ public class TextAppearanceManager : MonoBehaviour {
         else
         {
             lineIsFinished = true;
-            //Wait();
-            
-        }
+            PressKey();
+       }
 
     }
    
-    /*void Wait()
+    void PressKey()
     {
-        if (Time.time >= waitTime)
+        if (Input.anyKeyDown)
         {
-            ResetTextAppeareance();
-            if (dialogueScript != null)
-            {
-                dialogueScript.FinishLine = true;
-            }
-            this.enabled = false;
+            gameObject.SetActive(false);
+            title.SetActive(true);
         }
-    }*/
+    }
 
     IEnumerator TextDisplayer(Text text, string sentence)
     {
@@ -64,75 +58,5 @@ public class TextAppearanceManager : MonoBehaviour {
         hold = false;
     }
 
-    public void ResetTextAppeareance()
-    {
-        if(text!=null)
-            text.text = "";
-        index = 0;
-    }
-
-    public int Index
-    {
-        get
-        {
-            return index;
-        }
-
-        set
-        {
-            index = value;
-        }
-    }
-
-    public Text Text
-    {
-        get
-        {
-            return text;
-        }
-
-        set
-        {
-            text = value;
-        }
-    }
-
-    /*public char[] Sentence
-    {
-        get
-        {
-            return sentence;
-        }
-
-        set
-        {
-            sentence = value;
-        }
-    }*/
-
-    public bool LineIsFinished
-    {
-        get
-        {
-            return lineIsFinished;
-        }
-
-        set
-        {
-            lineIsFinished = value;
-        }
-    }
-
-   /* public DialogueNavigation DialogueScript
-    {
-        get
-        {
-            return dialogueScript;
-        }
-
-        set
-        {
-            dialogueScript = value;
-        }
-    }*/
+    
 }

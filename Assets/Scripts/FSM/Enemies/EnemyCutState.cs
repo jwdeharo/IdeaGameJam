@@ -39,7 +39,6 @@ public class EnemyCutState : EnemyBaseState, IState
        //AnimatorStateInfo animationState = MyAnimator.GetCurrentAnimatorStateInfo(0);
        //AnimatorClipInfo[] myAnimatorClip = MyAnimator.GetCurrentAnimatorClipInfo(0);
         TimeInCut = 0.3f;
-        Debug.Log("CUUUUUT");
     }
 
     public void OnExitState()
@@ -53,7 +52,6 @@ public class EnemyCutState : EnemyBaseState, IState
         if (MyController.CanCut)
         {
             //we hit the player here.
-            Debug.Log("CUT");
             if (TimeInCut <= 0.0f)
             {
                 MyFsm.SetFSMCondition("is_cutting", false);

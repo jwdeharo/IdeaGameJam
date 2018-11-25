@@ -23,6 +23,7 @@ public class ShootingState : IState {
 
     public void OnEnterState()
     {
+
         //When we enter the state, we find the player's PlayerController and its fsm to send the condition has changed.
 
         if (ThePlayer == null)
