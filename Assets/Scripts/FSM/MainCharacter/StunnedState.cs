@@ -31,6 +31,8 @@ public class StunnedState : IState
         MaxTimer = 2.0f;
         Timer = MaxTimer;
         MyAnimator.SetBool("stunned", true);
+        MyFsm.SetFSMCondition("is_cutting", false);
+        MyFsm.SetFSMCondition("is_dashing", false);
     }
 
     public void OnExitState()

@@ -2,36 +2,39 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DashState : IState {
+public class EnemyDashState : EnemyBaseState, IState
+{
 
-    private const float DashSpeed = 10.0f;
-    private const float StartDashTime = 0.4f;
+    private const float DashSpeed = 5.0f;
+    private const float StartDashTime = 0.1f;
 
     private float DashTime;
 
-    private PlayerController MyPlayerController;
+    private EnemyController MyController;
+    private GameObject      ThePlayer;
     private FSM MyFsm;
-    private GameObject ThePlayer;
-    
+
     public void OnEnterState()
     {
         //When we enter the state, we find the player's PlayerController and its fsm to send the condition has changed.
+
         if (ThePlayer == null)
         {
             ThePlayer = GameObject.Find("Player");
         }
 
-        if (MyPlayerController == null)
+        if (MyController == null)
         {
-            MyPlayerController = ThePlayer.GetComponent<PlayerController>();
+            MyController = MyGameObject.GetComponent<EnemyController>();
         }
 
         if (MyFsm == null)
         {
-            MyFsm = ThePlayer.GetComponent<FSM>();
+            MyFsm = MyGameObject.GetComponent<FSM>();
         }
+
         DashTime = StartDashTime;
-        MyPlayerController.GetMyAnimator().SetBool("Is_Dashing", true);
+        //MyPlayerController.GetMyAnimator().SetBool("Is_Dashing", true);
     }
 
     public void UpdateState()
@@ -43,8 +46,9 @@ public class DashState : IState {
         else
         {
             DashTime -= Time.deltaTime;
-            Vector3 DashMovement = MyPlayerController.GetDirection() * DashSpeed;
-            MyPlayerController.Move(DashMovement, true);
+            Vector3 PlayerPosition = ThePlayer.transform.position;
+            Vector3 DashMovement = PlayerPosition - MyGameObject.transform.position;
+            MyController.Move(DashMovement * DashSpeed, true);
         }
     }
 
@@ -52,6 +56,5 @@ public class DashState : IState {
     {
         //In this case, we want to pop from the stack of states and go back to the last state we remember.
         MyFsm.PopState();
-        MyPlayerController.GetMyAnimator().SetBool("Is_Dashing", false);
     }
 }
