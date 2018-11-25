@@ -58,8 +58,8 @@ public class EnemyChaseState : EnemyBaseState, IState
         //We calculate the distance to the target.
         Vector3 DistanceToWaypoint = ThePlayer.transform.position - MyGameObject.transform.position;
         MyEnemyController.Move(DistanceToWaypoint);
-
-        if (DistanceToWaypoint.magnitude > 7.0f)
+        MechanicManager PlayerMechanics = ThePlayer.GetComponent<MechanicManager>();
+        if (DistanceToWaypoint.magnitude > 7.0f || PlayerMechanics.GetUsefulMechanics() <= 1)
         {
             MyFsm.SetFSMCondition("start_chasing", false);
         }
