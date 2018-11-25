@@ -5,17 +5,17 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
 
-    private EnemyIdleState      MyIdleState;
-    private EnemyPatrolState    MyPatrolState;
-    private EnemyChaseState     MyChaseState;
-    private EnemyShockState     MyShockState;
-    private EnemyDieState       MyDieState;
-    private EnemyDashState      MyDashState;
-    private EnemyCutState       MyCutState;
+    private EnemyIdleState MyIdleState;
+    private EnemyPatrolState MyPatrolState;
+    private EnemyChaseState MyChaseState;
+    private EnemyShockState MyShockState;
+    private EnemyDieState MyDieState;
+    private EnemyDashState MyDashState;
+    private EnemyCutState MyCutState;
 
     private CharacterController MyController;
-    private FSM                 MyFsm;
-    private MechanicManager     PlayerMechanics;
+    private FSM MyFsm;
+    private MechanicManager PlayerMechanics;
 
     private List<MechanicManager.E_MECHANICS> CopiedMechanics;
 
@@ -38,13 +38,13 @@ public class EnemyController : MonoBehaviour
         CopiedMechanics = new List<MechanicManager.E_MECHANICS>();
 
         //Init of the enemy states.
-        MyIdleState     = new EnemyIdleState();
-        MyPatrolState   = new EnemyPatrolState();
-        MyChaseState    = new EnemyChaseState();
-        MyShockState    = new EnemyShockState();
-        MyDieState      = new EnemyDieState();
-        MyDashState     = new EnemyDashState();
-        MyCutState      = new EnemyCutState();
+        MyIdleState = new EnemyIdleState();
+        MyPatrolState = new EnemyPatrolState();
+        MyChaseState = new EnemyChaseState();
+        MyShockState = new EnemyShockState();
+        MyDieState = new EnemyDieState();
+        MyDashState = new EnemyDashState();
+        MyCutState = new EnemyCutState();
 
         MyIdleState.SetMyGameObject(Me);
         MyPatrolState.SetMyGameObject(Me);
@@ -119,7 +119,7 @@ public class EnemyController : MonoBehaviour
             CopiedMechanics.Add(PlayerMechanics.GetMoreUsedMechanic());
         }
 
-        if (PlayerMechanics.GetMyMechanics().Length > 1 && CopiedMechanics.Count > 0)
+        if (PlayerMechanics.GetUsefulMechanics() > 1 && CopiedMechanics.Count > 0)
         {
             int RandomIndex = Random.Range(0, CopiedMechanics.Count);
             int RandomValue = Random.Range(0, 10000);
@@ -168,7 +168,7 @@ public class EnemyController : MonoBehaviour
         {
             MechanicManager PlayerMechanics = MyParent.GetComponent<MechanicManager>();
             CanCut = true;
-            if (PlayerMechanics.GetMyMechanics().Length > 1)
+            if (PlayerMechanics.GetUsefulMechanics() > 1)
             {
                 MyFsm.SetFSMCondition("start_chasing", true);
             }
@@ -187,6 +187,15 @@ public class EnemyController : MonoBehaviour
     public void DestroyMe(GameObject aToDestroy)
     {
         Destroy(aToDestroy);
+    }
+
+    void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.gameObject.tag == "Player")
+        {
+            //If player gets hit. We will steal all his mechanics.
+            PlayerMechanics.RemoveMechanics();
+        }
     }
 }
 
