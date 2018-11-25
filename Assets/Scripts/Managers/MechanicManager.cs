@@ -9,7 +9,8 @@ public class MechanicManager : MonoBehaviour
     public enum E_MECHANICS
     {
         DASH = 0,
-        CUT,
+        CUT ,
+        CHARGE_TELEPORT ,
 
         NUM_MECHANICS
     }
@@ -34,9 +35,9 @@ public class MechanicManager : MonoBehaviour
 
         ActiveMechanics         = new E_MECHANICS[2];
         ActiveMechanics[0]      = E_MECHANICS.DASH;
-        ActiveMechanics[1]      = E_MECHANICS.CUT;
+        ActiveMechanics[1]      = E_MECHANICS.CHARGE_TELEPORT;
         CurrentLeftMechanic     = 0;
-        CurrentRighttMechanic   = 1;
+        CurrentRighttMechanic   = 2;
     }
 	
 	// Update is called once per frame
