@@ -2,20 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : BaseController
 {
 
-    private EnemyIdleState MyIdleState;
-    private EnemyPatrolState MyPatrolState;
-    private EnemyChaseState MyChaseState;
-    private EnemyShockState MyShockState;
-    private EnemyDieState MyDieState;
-    private EnemyDashState MyDashState;
-    private EnemyCutState MyCutState;
+    private EnemyIdleState      MyIdleState;
+    private EnemyPatrolState    MyPatrolState;
+    private EnemyChaseState     MyChaseState;
+    private EnemyShockState     MyShockState;
+    private EnemyDieState       MyDieState;
+    private EnemyDashState      MyDashState;
+    private EnemyCutState       MyCutState;
+    private EnemyShootState     MyShootState;
 
     private CharacterController MyController;
-    private FSM MyFsm;
-    private MechanicManager PlayerMechanics;
+    private FSM                 MyFsm;
+    private MechanicManager     PlayerMechanics;
 
     private List<MechanicManager.E_MECHANICS> CopiedMechanics;
 
@@ -45,6 +46,7 @@ public class EnemyController : MonoBehaviour
         MyDieState = new EnemyDieState();
         MyDashState = new EnemyDashState();
         MyCutState = new EnemyCutState();
+        MyShootState = new EnemyShootState();
 
         MyIdleState.SetMyGameObject(Me);
         MyPatrolState.SetMyGameObject(Me);
@@ -53,6 +55,7 @@ public class EnemyController : MonoBehaviour
         MyDieState.SetMyGameObject(Me);
         MyDashState.SetMyGameObject(Me);
         MyCutState.SetMyGameObject(Me);
+        MyShootState.SetMyGameObject(Me);
 
         for (int ChildIndex = 0; ChildIndex < transform.childCount; ChildIndex++)
         {
@@ -77,30 +80,38 @@ public class EnemyController : MonoBehaviour
         CCondition DashToChase = new CCondition("is_dashing", MyChaseState, false, false);
         CCondition ChaseToCut = new CCondition("is_cutting", MyCutState, true, false);
         CCondition CutToChase = new CCondition("is_cutting", MyChaseState, false, false);
+        CCondition IdleToShoot = new CCondition("is_shooting", MyShootState, true, false);
+        CCondition ChaseToShoot = new CCondition("is_shooting", MyShootState, true, false);
+        CCondition PatrolToShoot = new CCondition("is_shooting", MyShootState, true, false);
+        CCondition ShootToIdle = new CCondition("is_shooting", MyIdleState, false, false);
 
-        MyFsm.AddState("Idle", MyIdleState);
-        MyFsm.AddState("Patrol", MyPatrolState);
-        MyFsm.AddState("Chase", MyChaseState);
-        MyFsm.AddState("Shock", MyShockState);
-        MyFsm.AddState("Die", MyDieState);
-        MyFsm.AddState("Cut", MyCutState);
-        MyFsm.AddState("Dash", MyDashState);
+        MyFsm.AddState("Idle",      MyIdleState);
+        MyFsm.AddState("Patrol",    MyPatrolState);
+        MyFsm.AddState("Chase",     MyChaseState);
+        MyFsm.AddState("Shock",     MyShockState);
+        MyFsm.AddState("Die",       MyDieState);
+        MyFsm.AddState("Cut",       MyCutState);
+        MyFsm.AddState("Dash",      MyDashState);
+        MyFsm.AddState("Shoot",     MyDashState);
 
         MyFsm.AddCondition(MyIdleState, IdleToPatrol);
         MyFsm.AddCondition(MyIdleState, IdleToChase);
         MyFsm.AddCondition(MyIdleState, IdleToDash);
         MyFsm.AddCondition(MyIdleState, IdleToDieState);
+        MyFsm.AddCondition(MyIdleState, IdleToShoot);
 
         MyFsm.AddCondition(MyPatrolState, PatrolToIdle);
         MyFsm.AddCondition(MyPatrolState, PatrolToChase);
         MyFsm.AddCondition(MyPatrolState, PatrolToDieState);
         MyFsm.AddCondition(MyPatrolState, PatrolToDash);
+        MyFsm.AddCondition(MyPatrolState, PatrolToShoot);
 
         MyFsm.AddCondition(MyChaseState, ChaseToIdle);
         MyFsm.AddCondition(MyChaseState, ChaseToShock);
         MyFsm.AddCondition(MyChaseState, ChaseToDieState);
         MyFsm.AddCondition(MyChaseState, ChaseToDash);
         MyFsm.AddCondition(MyChaseState, ChaseToCut);
+        MyFsm.AddCondition(MyChaseState, ChaseToShoot);
 
         MyFsm.AddCondition(MyShockState, ShockToChase);
         MyFsm.AddCondition(MyShockState, ShockToDieState);
@@ -108,6 +119,8 @@ public class EnemyController : MonoBehaviour
         MyFsm.AddCondition(MyDashState, DashToChase);
 
         MyFsm.AddCondition(MyCutState, CutToChase);
+
+        MyFsm.AddCondition(MyShootState, ShootToIdle);
     }
 
     // Update is called once per frame
@@ -136,6 +149,9 @@ public class EnemyController : MonoBehaviour
                         {
                             MyFsm.SetFSMCondition("is_cutting", true);
                         }
+                        break;
+                    case MechanicManager.E_MECHANICS.SHOOT:
+                        MyFsm.SetFSMCondition("is_shooting", true);
                         break;
                 }
             }
@@ -194,8 +210,17 @@ public class EnemyController : MonoBehaviour
         if (hit.gameObject.tag == "Player")
         {
             //If player gets hit. We will steal all his mechanics.
+            for (int i = 0; i <  PlayerMechanics.GetMyMechanics().Length; i++)
+            {
+                if (!CopiedMechanics.Contains(PlayerMechanics.GetMyMechanics()[i]))
+                {
+                    CopiedMechanics.Add(PlayerMechanics.GetMyMechanics()[i]);
+                }
+            }
+
             PlayerMechanics.RemoveMechanics();
         }
     }
 }
+
 

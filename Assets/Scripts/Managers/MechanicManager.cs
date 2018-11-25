@@ -23,7 +23,7 @@ public class MechanicManager : MonoBehaviour
 
     private const int ActivableMechanics = 2;
 
-    private E_MECHANICS[] ActiveMechanics;
+    private static E_MECHANICS[] ActiveMechanics;
     public int CurrentLeftMechanic;
     public int CurrentRighttMechanic;
     private Dictionary<E_MECHANICS, int> NumberUsedMechanics;
@@ -104,6 +104,11 @@ public class MechanicManager : MonoBehaviour
     public E_MECHANICS[] GetMyMechanics()
     {
         return ActiveMechanics;
+    }
+
+    public static E_MECHANICS GetCurrentMechanic(int aIndex)
+    {
+        return ActiveMechanics[aIndex];
     }
 
     public void MechanicUsed(E_MECHANICS aMechanic)

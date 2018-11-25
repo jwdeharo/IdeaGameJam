@@ -5,9 +5,9 @@ using UnityEngine;
 public class Bullet : MonoBehaviour {
 
     public float speed = 10;
-
     public Vector2 direction;
-
+    public GameObject Source;
+    public string Destination;
 	// Use this for initialization
 	void Start () {
 		
@@ -21,8 +21,7 @@ public class Bullet : MonoBehaviour {
     private void OnTriggerEnter(Collider col)
     {
         string ColTag = col.gameObject.transform.parent.gameObject.tag;
-        Debug.Log("Just crashed with: " + ColTag);
-        if (ColTag .CompareTo( "Enemy")==0)
+        if (ColTag .CompareTo(Destination) ==0)
         {
             Affect(col);
         }
@@ -31,13 +30,17 @@ public class Bullet : MonoBehaviour {
 
     protected virtual void Affect(Collider col)
     {
-        Destroy(col.gameObject.transform.parent.gameObject);
+        if (col.gameObject.transform.parent.gameObject.name != "Player")
+        {
+            Destroy(col.gameObject.transform.parent.gameObject);
+        }
     }
 
     private void OnCollisionEnter(Collision col)
     {
-        Debug.Log("Collision with!: "+col.gameObject.name);
-        if (col.gameObject.name.CompareTo("Player") != 0)
+        if (col.gameObject.name.CompareTo(Source.name) != 0)
+        {
             Destroy(gameObject);
+        }
     }
 }

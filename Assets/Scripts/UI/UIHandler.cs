@@ -58,7 +58,6 @@ public class UIHandler : MonoBehaviour {
             {
                 botonesHabilidad[i].gameObject.SetActive(true);
 
-            
                 Image select1 = botonesHabilidad[i].GetComponentsInChildren<Image>(true)[1];
                 Image select2 = botonesHabilidad[i].GetComponentsInChildren<Image>(true)[0];
                 Image iconoHabilidad = botonesHabilidad[i].GetComponentsInChildren<Image>(true)[2];
@@ -66,9 +65,9 @@ public class UIHandler : MonoBehaviour {
                 select1.gameObject.SetActive(false);
                 select2.gameObject.SetActive(false);
 
-                if (i == manager.CurrentLeftMechanic)
+                if (CurrentMechanic == manager.GetMyMechanics()[manager.CurrentLeftMechanic])
                     select1.gameObject.SetActive(true);
-                if (i == manager.CurrentRighttMechanic)
+                if (CurrentMechanic == manager.GetMyMechanics()[manager.CurrentRighttMechanic])
                     select2.gameObject.SetActive(true);
 
                 iconoHabilidad.sprite = sprites[(int)manager.UnlockedMechanics[i]];
