@@ -39,15 +39,16 @@ public class EnemyDashState : EnemyBaseState, IState
 
     public void UpdateState()
     {
-        if (DashTime <= 0.0f)
+        Vector3 PlayerPosition = ThePlayer.transform.position;
+        Vector3 DashMovement = PlayerPosition - MyGameObject.transform.position;
+
+        if (DashTime <= 0.0f || DashMovement.magnitude < 1.0f)
         {
             MyFsm.SetFSMCondition("is_dashing", false);
         }
         else
         {
             DashTime -= Time.deltaTime;
-            Vector3 PlayerPosition = ThePlayer.transform.position;
-            Vector3 DashMovement = PlayerPosition - MyGameObject.transform.position;
             MyController.Move(DashMovement * DashSpeed, true);
         }
     }
