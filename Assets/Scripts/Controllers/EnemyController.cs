@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +9,12 @@ public class EnemyController : MonoBehaviour
     private EnemyIdleState MyIdleState;
     private EnemyPatrolState MyPatrolState;
     private EnemyChaseState MyChaseState;
+
+    internal void Slow(object tIME)
+    {
+        throw new NotImplementedException();
+    }
+
     private EnemyShockState MyShockState;
 
     private CharacterController MyController;
@@ -16,6 +23,9 @@ public class EnemyController : MonoBehaviour
 
     public float MoveSpeed;
     public string Name;
+
+    private float FreezeRemaining;
+    private bool freezed;
 
     // Use this for initialization
     void Start()
@@ -65,6 +75,17 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(freezed)
+        {
+            FreezeRemaining -= Time.deltaTime;
+            Debug.Log(FreezeRemaining);
+            if(FreezeRemaining < 0)
+            {
+                freezed = false;
+                MoveSpeed = MoveSpeed * 2;
+            }
+        }
+
         //In the idle state we wait to start patrolling.
     }
 
@@ -92,6 +113,17 @@ public class EnemyController : MonoBehaviour
                 MyFsm.SetFSMCondition("start_chasing", true);
             }
         }
+    }
+
+    public void Slow(float timeOfFreeze)
+    {
+        if (!freezed)
+        {
+            freezed = true;
+            MoveSpeed = MoveSpeed / 2;
+        }
+        FreezeRemaining = timeOfFreeze;
+
     }
 
     public void AnimationHasEnded()

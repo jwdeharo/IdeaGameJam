@@ -107,6 +107,7 @@ public class PlayerController : MonoBehaviour
         MyFsmMachine.AddCondition(MyIdleState, IdleToShootSlow);
         MyFsmMachine.AddCondition(MyShootingStateSlow, ShootSlowToIdle);
         MyFsmMachine.AddCondition(MyMoveState, MoveToShootSlow);
+        MyFsmMachine.AddCondition(MyCutState, CutToStunned);
 
         MyDirection = Vector3.zero;
         FacingRight = true;
@@ -281,4 +282,3 @@ public class PlayerController : MonoBehaviour
     }
 }
 
-        MyFsmMachine.AddCondition(MyCutState, CutToStunned);

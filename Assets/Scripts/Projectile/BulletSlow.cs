@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class BulletSlow : Bullet {
 
+    public static readonly float TIME = 5f;
+
     protected override void Affect(Collider col)
     {
-        Destroy(col.gameObject.transform.parent.gameObject);
+        col.gameObject.transform.parent.GetComponent<EnemyController>().Slow(TIME);
     }
 }
