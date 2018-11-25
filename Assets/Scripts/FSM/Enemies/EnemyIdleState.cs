@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyIdleState : EnemyBaseState, IState
 {
-    public float TimeToWait = 10.0f;
+    public float TimeToWait = 5.0f;
     
     private FSM MyFsm;
     private float TimeWaiting;
@@ -31,6 +31,7 @@ public class EnemyIdleState : EnemyBaseState, IState
     {
         if (TimeWaiting <= 0.0f)
         {
+            
             MyFsm.SetFSMCondition("start_patrol", true);
         }
         else
