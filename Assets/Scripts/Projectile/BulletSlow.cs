@@ -8,6 +8,6 @@ public class BulletSlow : Bullet {
 
     protected override void Affect(Collider col)
     {
-        col.gameObject.transform.parent.GetComponent<EnemyController>().Slow(TIME);
+        //col.gameObject.transform.parent.GetComponent<EnemyController>().Slow(TIME);
     }
 }

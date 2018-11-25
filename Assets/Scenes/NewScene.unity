@@ -2358,6 +2358,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SceneToLoad: RacingDrawingMiniGame_Shot
+  MechanicToUnload: 3
 --- !u!1 &412401569
 GameObject:
   m_ObjectHideFlags: 0
@@ -4344,6 +4345,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SceneToLoad: RacingDrawingMiniGame_Shot
+  MechanicToUnload: 3
 --- !u!65 &767274057
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8481,6 +8483,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SceneToLoad: RacingDrawingMiniGame_Shot
+  MechanicToUnload: 3
 --- !u!1 &1671801070
 GameObject:
   m_ObjectHideFlags: 0

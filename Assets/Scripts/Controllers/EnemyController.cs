@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class EnemyController : MonoBehaviour
 {
-    public static readonly float SLOW_AMOUNT = 3;
 
     private EnemyIdleState MyIdleState;
     private EnemyPatrolState MyPatrolState;
@@ -23,12 +20,11 @@ public class EnemyController : MonoBehaviour
     private List<MechanicManager.E_MECHANICS> CopiedMechanics;
 
     public GameObject Me;
-    private bool freezed;
+
     public float MoveSpeed;
     public string Name;
     public int TimesToCopy;
     public bool CanCut;
-    private float FreezeRemaining;
 
     // Use this for initialization
     void Start()
@@ -173,16 +169,10 @@ public class EnemyController : MonoBehaviour
             MechanicManager PlayerMechanics = MyParent.GetComponent<MechanicManager>();
             CanCut = true;
             if (PlayerMechanics.GetUsefulMechanics() > 1)
-            FreezeRemaining -= Time.deltaTime;
-            Debug.Log(FreezeRemaining);
-            if(FreezeRemaining < 0)
             {
-                freezed = false;
-                MoveSpeed = MoveSpeed * SLOW_AMOUNT;
+                MyFsm.SetFSMCondition("start_chasing", true);
             }
         }
-
-        //In the idle state we wait to start patrolling.
     }
 
     private void OnTriggerExit(Collider col)
@@ -192,18 +182,6 @@ public class EnemyController : MonoBehaviour
         {
             CanCut = false;
         }
-    }
-
-
-
-    public void Slow(float timeOfFreeze)
-    {
-        if (!freezed)
-        {
-            freezed = true;
-            MoveSpeed = MoveSpeed / SLOW_AMOUNT;
-        }
-        FreezeRemaining = timeOfFreeze;
     }
 
     public void DestroyMe(GameObject aToDestroy)
@@ -220,5 +198,4 @@ public class EnemyController : MonoBehaviour
         }
     }
 }
-
 

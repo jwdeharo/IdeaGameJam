@@ -53,22 +53,26 @@ public class UIHandler : MonoBehaviour {
         //Por cada habilidad, hace un render sobre ese GameObject
         for (int i = 0; i < manager.UnlockedMechanics.Count; i++)
         {
-            botonesHabilidad[i].gameObject.SetActive(true);
+            MechanicManager.E_MECHANICS CurrentMechanic = manager.UnlockedMechanics[i];
+            if (CurrentMechanic != MechanicManager.E_MECHANICS.NONE_MECHANIC)
+            {
+                botonesHabilidad[i].gameObject.SetActive(true);
 
             
-            Image select1 = botonesHabilidad[i].GetComponentsInChildren<Image>(true)[1];
-            Image select2 = botonesHabilidad[i].GetComponentsInChildren<Image>(true)[0];
-            Image iconoHabilidad = botonesHabilidad[i].GetComponentsInChildren<Image>(true)[2];
+                Image select1 = botonesHabilidad[i].GetComponentsInChildren<Image>(true)[1];
+                Image select2 = botonesHabilidad[i].GetComponentsInChildren<Image>(true)[0];
+                Image iconoHabilidad = botonesHabilidad[i].GetComponentsInChildren<Image>(true)[2];
 
-            select1.gameObject.SetActive(false);
-            select2.gameObject.SetActive(false);
+                select1.gameObject.SetActive(false);
+                select2.gameObject.SetActive(false);
 
-            if (i == manager.CurrentLeftMechanic)
-                select1.gameObject.SetActive(true);
-            if (i == manager.CurrentRighttMechanic)
-                select2.gameObject.SetActive(true);
+                if (i == manager.CurrentLeftMechanic)
+                    select1.gameObject.SetActive(true);
+                if (i == manager.CurrentRighttMechanic)
+                    select2.gameObject.SetActive(true);
 
-            iconoHabilidad.sprite = sprites[(int)manager.UnlockedMechanics[i]];
+                iconoHabilidad.sprite = sprites[(int)manager.UnlockedMechanics[i]];
+            }
         }
     }
 }

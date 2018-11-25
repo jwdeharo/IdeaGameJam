@@ -23,7 +23,6 @@ public class MechanicManager : MonoBehaviour
 
     private const int ActivableMechanics = 2;
 
-    private E_MECHANICS[] MyMechanics;
     private E_MECHANICS[] ActiveMechanics;
     public int CurrentLeftMechanic;
     public int CurrentRighttMechanic;
@@ -34,54 +33,52 @@ public class MechanicManager : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-        MyMechanics             = new E_MECHANICS[(int)E_MECHANICS.NUM_MECHANICS];
         NumberUsedMechanics     = new Dictionary<E_MECHANICS, int>();
-
-
+        UnlockedMechanics       = new List<E_MECHANICS>();
+        
         for (int i = 0; i < (int)E_MECHANICS.NUM_MECHANICS; ++i)
         {
-            MyMechanics[i] = E_MECHANICS.NONE_MECHANIC;
             NumberUsedMechanics.Add((E_MECHANICS)i, 0);
+            UnlockedMechanics.Add(E_MECHANICS.NONE_MECHANIC);
         }
 
         ActiveMechanics         = new E_MECHANICS[2];
-        MyMechanics[(int)E_MECHANICS.DASH]          = E_MECHANICS.DASH;
-        MyMechanics[(int)E_MECHANICS.CUT] = E_MECHANICS.CUT;
         ActiveMechanics[0]      = E_MECHANICS.DASH;
-        ActiveMechanics[1]      = E_MECHANICS.CHARGE_TELEPORT;
-        UnlockedMechanics = new List<E_MECHANICS>();
-        UnlockedMechanics.Add(E_MECHANICS.DASH);
+        ActiveMechanics[1]      = E_MECHANICS.NONE_MECHANIC;
+
+        UnlockedMechanics[(int)E_MECHANICS.DASH] = E_MECHANICS.DASH;
+
         CurrentLeftMechanic     = 0;
-        CurrentRighttMechanic   = 0;
+        CurrentRighttMechanic   = 1;
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        if (UnlockedMechanics.Count > 1)
+        if (GetUsefulMechanics() > 1)
         {
             if (UnlockedMechanics[CurrentRighttMechanic] == ActiveMechanics[0])
             {
                 UpdateRightMechanic();
+                ActiveMechanics[1] = UnlockedMechanics[CurrentRighttMechanic];
             }
 
             if (UnlockedMechanics[CurrentLeftMechanic] == ActiveMechanics[1])
             {
                 UpdateLeftMechanic();
+                ActiveMechanics[0] = UnlockedMechanics[CurrentLeftMechanic];
             }
         }
 
-        ActiveMechanics[0] = UnlockedMechanics[CurrentLeftMechanic];
-        ActiveMechanics[1] = UnlockedMechanics[CurrentRighttMechanic];
     }
 
     public int GetUsefulMechanics()
     {
         int NumberMechanics = 0;
 
-        for (int Index = 0; Index < MyMechanics.Length; Index++)
+        for (int Index = 0; Index < UnlockedMechanics.Count; Index++)
         {
-            if (MyMechanics[Index] != E_MECHANICS.NONE_MECHANIC)
+            if (UnlockedMechanics[Index] != E_MECHANICS.NONE_MECHANIC)
             {
                 NumberMechanics++;
             }
@@ -92,11 +89,11 @@ public class MechanicManager : MonoBehaviour
 
     public void RemoveMechanics()
     {
-        for (int Index = 0; Index < MyMechanics.Length; Index++)
+        for (int Index = 0; Index < UnlockedMechanics.Count; Index++)
         {
-            if (MyMechanics[Index] != E_MECHANICS.DASH)
+            if (UnlockedMechanics[Index] != E_MECHANICS.DASH)
             {
-                MyMechanics[Index] = E_MECHANICS.NONE_MECHANIC;
+                UnlockedMechanics[Index] = E_MECHANICS.NONE_MECHANIC;
             }
         }
 
@@ -154,6 +151,17 @@ public class MechanicManager : MonoBehaviour
         else
         {
             CurrentRighttMechanic = 0;
+        }
+    }
+
+    public void UnlockMechanic(E_MECHANICS aMechanic)
+    {
+        UnlockedMechanics[(int)aMechanic] = aMechanic;
+
+        if (ActiveMechanics[1] == E_MECHANICS.NONE_MECHANIC)
+        {
+            Debug.Log(aMechanic);
+            ActiveMechanics[1] = aMechanic;
         }
     }
 }
