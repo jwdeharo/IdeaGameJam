@@ -46,7 +46,7 @@ public class EnemyShockState : EnemyBaseState, IState
     {
         Vector3 DistanceToWaypoint = ThePlayer.transform.position - MyGameObject.transform.position;
 
-        if (!HasBeenStunned && DistanceToWaypoint.magnitude < 2.0f)
+        if (!HasBeenStunned && DistanceToWaypoint.magnitude < 1.0f)
         {
             FSM PlayerFSM = ThePlayer.GetComponent<FSM>();
 
