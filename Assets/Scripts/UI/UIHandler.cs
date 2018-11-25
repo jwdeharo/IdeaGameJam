@@ -8,11 +8,13 @@ public class UIHandler : MonoBehaviour {
 
     public static readonly int MAXIMUM_HEALTH_YOU_CAN_HAVE = 600;
 
+    private MechanicManager manager;
+
+    public List<Sprite> sprites;
+
     //PLACEHOLDER FIELDS
     public int health;
     public int maxHealth;
-    public int habilidadesDisponibles;
-    public int mouse1Selected, mouse2Selected;
 
 
     public Slider lifeBar;
@@ -23,6 +25,7 @@ public class UIHandler : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         botonesHabilidad = papiHabilidades.Cast<Transform>().ToArray();
+        manager = GameObject.FindObjectOfType<MechanicManager>();
     }
 	
 	// Update is called once per frame
@@ -48,21 +51,24 @@ public class UIHandler : MonoBehaviour {
             boton.gameObject.SetActive(false);
         //Activa un número igual al de habilidades disponibles
         //Por cada habilidad, hace un render sobre ese GameObject
-        for (int i = 0; i < habilidadesDisponibles; i++)
+        for (int i = 0; i < manager.UnlockedMechanics.Count; i++)
         {
             botonesHabilidad[i].gameObject.SetActive(true);
 
             
             Image select1 = botonesHabilidad[i].GetComponentsInChildren<Image>(true)[1];
             Image select2 = botonesHabilidad[i].GetComponentsInChildren<Image>(true)[0];
+            Image iconoHabilidad = botonesHabilidad[i].GetComponentsInChildren<Image>(true)[2];
 
             select1.gameObject.SetActive(false);
             select2.gameObject.SetActive(false);
 
-            if (i == mouse1Selected)
+            if (i == manager.CurrentLeftMechanic)
                 select1.gameObject.SetActive(true);
-            if (i == mouse2Selected)
+            if (i == manager.CurrentRighttMechanic)
                 select2.gameObject.SetActive(true);
+
+            iconoHabilidad.sprite = sprites[(int)manager.UnlockedMechanics[i]];
         }
     }
 }

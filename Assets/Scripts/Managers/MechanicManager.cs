@@ -6,7 +6,7 @@ public class MechanicManager : MonoBehaviour
 {
 
     //Enum to know what mechanics are active at the moments
-    public enum E_MECHANICS
+    public enum E_MECHANICS: int
     {
         DASH = 0,
         CUT ,
@@ -21,9 +21,10 @@ public class MechanicManager : MonoBehaviour
     private const int ActivableMechanics = 2;
 
     private E_MECHANICS[] MyMechanics;
-    private E_MECHANICS[] ActiveMechanics;
-    private int CurrentLeftMechanic;
-    private int CurrentRighttMechanic;
+    public E_MECHANICS[] ActiveMechanics;
+    public List<E_MECHANICS> UnlockedMechanics;
+    public int CurrentLeftMechanic;
+    public int CurrentRighttMechanic;
 
 
     // Use this for initialization
@@ -39,25 +40,30 @@ public class MechanicManager : MonoBehaviour
         ActiveMechanics         = new E_MECHANICS[2];
         ActiveMechanics[0]      = E_MECHANICS.DASH;
         ActiveMechanics[1]      = E_MECHANICS.CHARGE_TELEPORT;
+        UnlockedMechanics = new List<E_MECHANICS>();
+        UnlockedMechanics.Add(E_MECHANICS.DASH);
         CurrentLeftMechanic     = 0;
-        CurrentRighttMechanic   = 4;
+        CurrentRighttMechanic   = 0;
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        if (MyMechanics[CurrentRighttMechanic] == ActiveMechanics[0])
+        if (UnlockedMechanics.Count > 1)
         {
-            UpdateRightMechanic();
+            if (UnlockedMechanics[CurrentRighttMechanic] == ActiveMechanics[0])
+            {
+                UpdateRightMechanic();
+            }
+
+            if (UnlockedMechanics[CurrentLeftMechanic] == ActiveMechanics[1])
+            {
+                UpdateLeftMechanic();
+            }
         }
 
-        if (MyMechanics[CurrentLeftMechanic] == ActiveMechanics[1])
-        {
-            UpdateLeftMechanic();
-        }
-
-        ActiveMechanics[0] = MyMechanics[CurrentLeftMechanic];
-        ActiveMechanics[1] = MyMechanics[CurrentRighttMechanic];
+        ActiveMechanics[0] = UnlockedMechanics[CurrentLeftMechanic];
+        ActiveMechanics[1] = UnlockedMechanics[CurrentRighttMechanic];
     }
 
     public E_MECHANICS[] GetMyMechanics()
@@ -67,7 +73,7 @@ public class MechanicManager : MonoBehaviour
 
     public void UpdateLeftMechanic()
     {
-        if (CurrentLeftMechanic < MyMechanics.Length - 1)
+        if (CurrentLeftMechanic < UnlockedMechanics.Count - 1)
         {
             CurrentLeftMechanic++;
         }
@@ -79,7 +85,7 @@ public class MechanicManager : MonoBehaviour
 
     public void UpdateRightMechanic()
     {
-        if (CurrentRighttMechanic < MyMechanics.Length - 1)
+        if (CurrentRighttMechanic < UnlockedMechanics.Count - 1)
         {
             CurrentRighttMechanic++;
         }
