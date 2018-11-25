@@ -16,6 +16,7 @@ public class MechanicManager : MonoBehaviour
         SHOOT,
         SHOOT_SLOW,
 
+        NONE_MECHANIC,
 
         NUM_MECHANICS
     }
@@ -39,11 +40,13 @@ public class MechanicManager : MonoBehaviour
 
         for (int i = 0; i < (int)E_MECHANICS.NUM_MECHANICS; ++i)
         {
-            MyMechanics[i] = (E_MECHANICS)i;
+            MyMechanics[i] = E_MECHANICS.NONE_MECHANIC;
             NumberUsedMechanics.Add((E_MECHANICS)i, 0);
         }
 
         ActiveMechanics         = new E_MECHANICS[2];
+        MyMechanics[(int)E_MECHANICS.DASH]          = E_MECHANICS.DASH;
+        MyMechanics[(int)E_MECHANICS.CUT] = E_MECHANICS.CUT;
         ActiveMechanics[0]      = E_MECHANICS.DASH;
         ActiveMechanics[1]      = E_MECHANICS.CHARGE_TELEPORT;
         UnlockedMechanics = new List<E_MECHANICS>();
@@ -70,6 +73,35 @@ public class MechanicManager : MonoBehaviour
 
         ActiveMechanics[0] = UnlockedMechanics[CurrentLeftMechanic];
         ActiveMechanics[1] = UnlockedMechanics[CurrentRighttMechanic];
+    }
+
+    public int GetUsefulMechanics()
+    {
+        int NumberMechanics = 0;
+
+        for (int Index = 0; Index < MyMechanics.Length; Index++)
+        {
+            if (MyMechanics[Index] != E_MECHANICS.NONE_MECHANIC)
+            {
+                NumberMechanics++;
+            }
+        }
+
+        return NumberMechanics;
+    }
+
+    public void RemoveMechanics()
+    {
+        for (int Index = 0; Index < MyMechanics.Length; Index++)
+        {
+            if (MyMechanics[Index] != E_MECHANICS.DASH)
+            {
+                MyMechanics[Index] = E_MECHANICS.NONE_MECHANIC;
+            }
+        }
+
+        ActiveMechanics[0] = E_MECHANICS.DASH;
+        ActiveMechanics[1] = E_MECHANICS.NONE_MECHANIC;
     }
 
     public E_MECHANICS[] GetMyMechanics()
