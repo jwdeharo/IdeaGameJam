@@ -24,7 +24,6 @@ public class ShootingState : IState {
     public void OnEnterState()
     {
 
-        Debug.Log("hola");
         //When we enter the state, we find the player's PlayerController and its fsm to send the condition has changed.
 
         if (ThePlayer == null)
