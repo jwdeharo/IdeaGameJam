@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MechanicManager : MonoBehaviour
@@ -85,6 +87,20 @@ public class MechanicManager : MonoBehaviour
         {
             CurrentLeftMechanic = 0;
         }
+    }
+    
+    public E_MECHANICS GetMoreUsedMechanic()
+    {
+        List<KeyValuePair<E_MECHANICS, int>> MyList = NumberUsedMechanics.ToList();
+        MyList.Sort((x, y) => y.Value.CompareTo(x.Value));
+        return MyList[0].Key;
+    }
+
+    public int GetIntMoreUsedMechanic()
+    {
+        List<KeyValuePair<E_MECHANICS, int>> MyList = NumberUsedMechanics.ToList();
+        MyList.Sort((x, y) => y.Value.CompareTo(x.Value));
+        return MyList[0].Value;
     }
 
     public void UpdateRightMechanic()

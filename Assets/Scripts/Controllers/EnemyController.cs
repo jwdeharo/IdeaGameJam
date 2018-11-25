@@ -13,16 +13,26 @@ public class EnemyController : MonoBehaviour
 
     private CharacterController MyController;
     private FSM                 MyFsm;
-    public GameObject           Me;
+    private MechanicManager     PlayerMechanics;
 
+    private List<MechanicManager.E_MECHANICS> CopiedMechanics;
+
+    public  GameObject          Me;
+    
     public float                MoveSpeed;
     public string               Name;
+    public int                  TimesToCopy;
 
     // Use this for initialization
     void Start()
     {
+        GameObject ThePlayer = GameObject.Find("Player");
+
         MyFsm = GetComponent<FSM>();
         MyController = GetComponent<CharacterController>();
+        PlayerMechanics = ThePlayer.GetComponent<MechanicManager>();
+
+        CopiedMechanics = new List<MechanicManager.E_MECHANICS>();
 
         //Init of the enemy states.
         MyIdleState     = new EnemyIdleState();
@@ -78,6 +88,10 @@ public class EnemyController : MonoBehaviour
     void Update()
     {
         //In the idle state we wait to start patrolling.
+        if (!CopiedMechanics.Contains(PlayerMechanics.GetMoreUsedMechanic()) && PlayerMechanics.GetIntMoreUsedMechanic() >= TimesToCopy  )
+        {
+            CopiedMechanics.Add(PlayerMechanics.GetMoreUsedMechanic());
+        }
     }
 
     // Each state will call this function and will move according its characteristics.

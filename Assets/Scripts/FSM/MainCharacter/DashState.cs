@@ -30,7 +30,6 @@ public class DashState : IState {
         {
             MyFsm = ThePlayer.GetComponent<FSM>();
         }
-        Debug.Log("ONENTER");
         DashTime = StartDashTime;
         MyPlayerController.GetMyAnimator().SetBool("Is_Dashing", true);
     }

@@ -89,7 +89,6 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
 
-
         //If the input is different from 0, then this means that we're moving.
         if (InputManager.GetJoystickMovement() != Vector3.zero && !MyFsmMachine.IsState("Dash") && !MyFsmMachine.IsState("Cut") && !MyFsmMachine.IsState("Stunned"))
         {
@@ -136,7 +135,6 @@ public class PlayerController : MonoBehaviour
     private void ActivateMechanic(int aMechanicIndex)
     {
         MyMechanicManager.MechanicUsed((MechanicManager.E_MECHANICS)aMechanicIndex);
-        Debug.Log(((MechanicManager.E_MECHANICS)aMechanicIndex).ToString() + "Has been used " + MyMechanicManager.GetMechanicUsedTimes((MechanicManager.E_MECHANICS)aMechanicIndex));
 
         switch (MyMechanicManager.GetMyMechanics()[aMechanicIndex])
         {
@@ -152,7 +150,6 @@ public class PlayerController : MonoBehaviour
 
                     if (EnemyFsm != null)
                     {
-                        Debug.Log("cut");
                         EnemyFsm.SetFSMCondition("time_to_die", true);
                     }
                 }
