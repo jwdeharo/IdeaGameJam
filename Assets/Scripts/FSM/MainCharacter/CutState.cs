@@ -40,7 +40,6 @@ public class CutState : IState
             MyAnimator = ThePlayer.GetComponent<Animator>();
         }
 
-        Debug.Log("Bitch");
         MyAnimator.SetBool("Is_cutting", true);
         AnimatorStateInfo animationState = MyAnimator.GetCurrentAnimatorStateInfo(0);
         AnimatorClipInfo[] myAnimatorClip = MyAnimator.GetCurrentAnimatorClipInfo(0);

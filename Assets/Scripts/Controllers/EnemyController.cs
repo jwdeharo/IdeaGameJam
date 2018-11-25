@@ -7,6 +7,7 @@ public class EnemyController : MonoBehaviour
 
     private EnemyIdleState MyIdleState;
     private EnemyPatrolState MyPatrolState;
+    private EnemyChaseState MyChaseState;
 
     private CharacterController MyController;
     private FSM MyFsm;
@@ -24,9 +25,11 @@ public class EnemyController : MonoBehaviour
         //Init of the enemy states.
         MyIdleState = new EnemyIdleState();
         MyPatrolState = new EnemyPatrolState();
+        MyChaseState = new EnemyChaseState();
 
         MyIdleState.SetMyGameObject(Me);
         MyPatrolState.SetMyGameObject(Me);
+        MyChaseState.SetMyGameObject(Me);
 
         for (int ChildIndex = 0; ChildIndex < transform.childCount; ChildIndex++)
         {
@@ -35,13 +38,20 @@ public class EnemyController : MonoBehaviour
         }
 
         CCondition IdleToPatrol = new CCondition("start_patrol", MyPatrolState, true, false);
+        CCondition IdleToChase = new CCondition("start_chasing", MyChaseState, true, false);
         CCondition PatrolToIdle = new CCondition("start_patrol", MyIdleState, false, false);
+        CCondition PatrolToChase = new CCondition("start_chasing", MyChaseState, true, false);
+        CCondition ChaseToIdle = new CCondition("start_chasing", MyIdleState, false, false);
 
         MyFsm.AddState("Idle", MyIdleState);
         MyFsm.AddState("Patrol", MyPatrolState);
+        MyFsm.AddState("Chase", MyPatrolState);
 
         MyFsm.AddCondition(MyIdleState, IdleToPatrol);
+        MyFsm.AddCondition(MyIdleState, IdleToChase);
         MyFsm.AddCondition(MyPatrolState, PatrolToIdle);
+        MyFsm.AddCondition(MyPatrolState, PatrolToChase);
+        MyFsm.AddCondition(MyChaseState, ChaseToIdle);
     }
 
     // Update is called once per frame
@@ -61,5 +71,14 @@ public class EnemyController : MonoBehaviour
     public float GetMoveSpeed()
     {
         return MoveSpeed * Time.deltaTime;
+    }
+
+    private void OnTriggerEnter(Collider col)
+    {
+        GameObject MyParent = col.gameObject.transform.parent.gameObject;
+        if (MyParent.tag == "Player")
+        {
+            MyFsm.SetFSMCondition("start_chasing", true);
+        }
     }
 }
