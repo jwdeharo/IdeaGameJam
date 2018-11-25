@@ -6,6 +6,6 @@ public class AnimationManager : MonoBehaviour
 {
     public void OnAnimationEnd()
     {
-        SendMessage("AnimationHasEnded");
+        
     }
 }
