@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/NewScene.unity
     guid: e04863765219f4442b8da9dfa7c2c334
+  - enabled: 1
+    path: Assets/Scenes/RacingDrawingMiniGame_Shot.unity
+    guid: 189924d266470614caea0b2e72661429
   m_configObjects: {}

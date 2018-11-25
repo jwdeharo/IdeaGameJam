@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+
+
     //My finite state machine.
     private FSM MyFsmMachine;
     //Character controller that will help us to move and detect collisions.
@@ -259,11 +261,14 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider col)
     {
-        string ColTag = col.gameObject.transform.parent.gameObject.tag;
-        if (ColTag == "Enemy")
+        if (col.gameObject.transform.parent != null)
         {
-            ToCut = col.gameObject.transform.parent.gameObject;
-            CanCutEnemy = true;
+            string ColTag = col.gameObject.transform.parent.gameObject.tag;
+            if (ColTag == "Enemy")
+            {
+                ToCut = col.gameObject.transform.parent.gameObject;
+                CanCutEnemy = true;
+            }
         }
     }
 

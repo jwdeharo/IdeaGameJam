@@ -2157,6 +2157,8 @@ GameObject:
   - component: {fileID: 398025631}
   - component: {fileID: 398025630}
   - component: {fileID: 398025629}
+  - component: {fileID: 398025633}
+  - component: {fileID: 398025632}
   m_Layer: 0
   m_Name: SkilAltar
   m_TagString: Untagged
@@ -2242,6 +2244,30 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &398025632
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 398025628}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &398025633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 398025628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9825b45aa975b1c49923e20a6b40bd3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SceneToLoad: RacingDrawingMiniGame_Shot
 --- !u!1 &412401569
 GameObject:
   m_ObjectHideFlags: 0
@@ -4202,7 +4228,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &767274055
 Transform:
   m_ObjectHideFlags: 0
@@ -5685,7 +5711,7 @@ Transform:
   m_Children:
   - {fileID: 1536711948}
   m_Father: {fileID: 0}
-  m_RootOrder: 17
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1146363891
 GameObject:
@@ -8261,7 +8287,7 @@ Transform:
   m_Children:
   - {fileID: 518398180}
   m_Father: {fileID: 0}
-  m_RootOrder: 16
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1668238374
 GameObject:
@@ -8350,7 +8376,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 18
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1668238378
 MonoBehaviour:

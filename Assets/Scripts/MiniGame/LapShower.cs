@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class LapShower : MonoBehaviour {
 
+    public int HabilidadDesbloqueada;
     public int numeroDeVueltas = 3;
 
     private Text text;
@@ -27,6 +28,7 @@ public class LapShower : MonoBehaviour {
     private void Victory()
     {
         string sceneName = PlayerPrefs.GetString("lastLoadedScene");
+        PlayerPrefs.SetString("lastLoadedScene", SceneManager.GetActiveScene().name);
         SceneManager.LoadScene(sceneName);//back to previous scene1?
     }
 }
