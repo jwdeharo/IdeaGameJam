@@ -11,6 +11,8 @@ public class MechanicManager : MonoBehaviour
         DASH = 0,
         CUT ,
         CHARGE_TELEPORT ,
+        SHOOT,
+
 
         NUM_MECHANICS
     }
@@ -37,7 +39,7 @@ public class MechanicManager : MonoBehaviour
         ActiveMechanics[0]      = E_MECHANICS.DASH;
         ActiveMechanics[1]      = E_MECHANICS.CHARGE_TELEPORT;
         CurrentLeftMechanic     = 0;
-        CurrentRighttMechanic   = 2;
+        CurrentRighttMechanic   = 3;
     }
 	
 	// Update is called once per frame

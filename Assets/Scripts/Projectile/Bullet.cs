@@ -6,6 +6,8 @@ public class Bullet : MonoBehaviour {
 
     public float speed = 10;
 
+    public Vector2 direction;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -13,7 +15,7 @@ public class Bullet : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        transform.Translate(transform.right * speed / 100) ;
+        transform.Translate(direction * speed / 100) ;
 	}
 
     private void OnTriggerEnter(Collider col)
@@ -25,5 +27,11 @@ public class Bullet : MonoBehaviour {
             Destroy(col.gameObject.transform.parent.gameObject);
         }
         Destroy(gameObject);
+    }
+    private void OnCollisionEnter(Collision col)
+    {
+        Debug.Log("Collision with!: "+col.gameObject.name);
+        if (col.gameObject.name.CompareTo("Player") != 0)
+            Destroy(gameObject);
     }
 }
