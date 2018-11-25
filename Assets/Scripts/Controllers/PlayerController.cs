@@ -22,6 +22,8 @@ public class PlayerController : MonoBehaviour
 
     public float MoveSpeed = 5.0f;
     public Animator MyAnimator;
+    public bool CanMove;
+    private float Timer;
 
 
     // Use this for initialization
@@ -67,13 +69,24 @@ public class PlayerController : MonoBehaviour
         MyDirection = Vector3.zero;
         FacingRight = true;
         CanCutEnemy = false;
+        CanMove = true;
         SensibilityTrigger = 0.0f;
+        Timer = 0.0f;
     }
 
     private void FixedUpdate()
     {
+        if (!CanMove)
+        {
+            Timer += Time.deltaTime;
+            if (Timer >= 2.0f) 
+            {
+                CanMove = true;
+            }
+        }
+        
         //If the input is different from 0, then this means that we're moving.
-        if (InputManager.GetJoystickMovement() != Vector3.zero && !MyFsmMachine.IsState("Dash") && !MyFsmMachine.IsState("Cut"))
+        if (InputManager.GetJoystickMovement() != Vector3.zero && !MyFsmMachine.IsState("Dash") && !MyFsmMachine.IsState("Cut") && CanMove)
         {
             MyFsmMachine.SetFSMCondition("is_moving", true);
         }
