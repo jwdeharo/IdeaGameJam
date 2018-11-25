@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : BaseController
 {
 
 
@@ -121,17 +121,7 @@ public class PlayerController : MonoBehaviour
         SensibilityTrigger = 0.0f;
         Timer = 0.0f;
     }
-
-    internal void Shoot(GameObject bullet, Vector3 directionOfShooting)
-    {
-
-        Debug.Log(directionOfShooting);
-        GameObject instance = Instantiate(bullet, transform.position, Quaternion.identity);
-        instance.GetComponent<Bullet>().direction = directionOfShooting;
-        Physics.IgnoreCollision(GetComponentInChildren<SphereCollider>(), 
-            instance.GetComponent<Collider>());
-    }
-
+    
     private void FixedUpdate()
     {
         if (DataManager.CurrentMechanic != MechanicManager.E_MECHANICS.NONE_MECHANIC)
@@ -186,8 +176,8 @@ public class PlayerController : MonoBehaviour
 
     private void ActivateMechanic(int aMechanicIndex)
     {
-        MyMechanicManager.MechanicUsed((MechanicManager.E_MECHANICS)aMechanicIndex);
-
+        
+        MyMechanicManager.MechanicUsed(MechanicManager.GetCurrentMechanic(aMechanicIndex));
         switch (MyMechanicManager.GetMyMechanics()[aMechanicIndex])
         {
             case MechanicManager.E_MECHANICS.DASH:
