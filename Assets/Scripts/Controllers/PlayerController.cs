@@ -41,11 +41,14 @@ public class PlayerController : MonoBehaviour
         MyMechanicManager = GetComponent<MechanicManager>();
 
         ////We start the states here.
-        MyIdleState     = new IdleState();
-        MyMoveState     = new MoveState();
-        MyDashState     = new DashState();
-        MyCutState      = new CutState();
-        MyStunnedState  = new StunnedState();
+        MyIdleState = new IdleState();
+        MyMoveState = new MoveState();
+        MyDashState = new DashState();
+        MyCutState = new CutState();
+        MyTeleportState = new TeleportingState();
+        MyShootingState = new ShootingState((GameObject)Resources.Load("Projectile"), "is_shooting");
+        MyShootingStateSlow = new ShootingState((GameObject)Resources.Load("ProjectileSlow"), "is_shootingSlow");
+        MyStunnedState = new StunnedState();
 
         //We define conditions to change between states here.
         CCondition IdleToMove = new CCondition("is_moving", MyMoveState, true, false);
@@ -286,11 +289,4 @@ public class PlayerController : MonoBehaviour
 }
 
 
-        MyIdleState = new IdleState();
-        MyMoveState = new MoveState();
-        MyDashState = new DashState();
-        MyCutState  = new CutState();
-        MyTeleportState = new TeleportingState();
-        MyShootingState = new ShootingState((GameObject)Resources.Load("Projectile"), "is_shooting");
-        MyShootingStateSlow = new ShootingState((GameObject)Resources.Load("ProjectileSlow"), "is_shootingSlow");
-        MyStunnedState  = new StunnedState();
+        

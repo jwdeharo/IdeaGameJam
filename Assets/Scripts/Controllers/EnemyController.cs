@@ -2,17 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class EnemyController : MonoBehaviour
 {
     public static readonly float SLOW_AMOUNT = 3;
-
-    private EnemyIdleState MyIdleState;
-    private EnemyPatrolState MyPatrolState;
-    private EnemyChaseState MyChaseState;
-
-public class EnemyController : MonoBehaviour
-{
 
     private EnemyIdleState MyIdleState;
     private EnemyPatrolState MyPatrolState;
@@ -28,10 +22,11 @@ public class EnemyController : MonoBehaviour
     private List<MechanicManager.E_MECHANICS> CopiedMechanics;
 
     public GameObject Me;
-
+    private bool freezed;
     public float MoveSpeed;
     public string Name;
     public int TimesToCopy;
+    private float FreezeRemaining;
 
     // Use this for initialization
     void Start()
@@ -169,31 +164,7 @@ public class EnemyController : MonoBehaviour
         //In the idle state we wait to start patrolling.
     }
 
-    // Each state will call this function and will move according its characteristics.
-    public void Move(Vector3 aMovement, bool aIsDashing = false)
-    {
-        MyController.Move(aMovement * Time.deltaTime * MoveSpeed);
-        // Flip((aMovement).normalized.x);
-    }
 
-    public float GetMoveSpeed()
-    {
-        return MoveSpeed * Time.deltaTime;
-    }
-
-    private void OnTriggerEnter(Collider col)
-    {
-        GameObject MyParent = col.gameObject.transform.parent.gameObject;
-        if (MyParent.tag == "Player")
-        {
-            MechanicManager PlayerMechanics = MyParent.GetComponent<MechanicManager>();
-
-            if (PlayerMechanics.GetMyMechanics().Length > 1)
-            {
-                MyFsm.SetFSMCondition("start_chasing", true);
-            }
-        }
-    }
 
     public void Slow(float timeOfFreeze)
     {
@@ -203,10 +174,12 @@ public class EnemyController : MonoBehaviour
             MoveSpeed = MoveSpeed / SLOW_AMOUNT;
         }
         FreezeRemaining = timeOfFreeze;
+    }
 
     public void DestroyMe(GameObject aToDestroy)
     {
         Destroy(aToDestroy);
     }
 }
+
 

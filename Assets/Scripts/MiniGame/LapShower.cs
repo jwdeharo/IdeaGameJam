@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class LapShower : MonoBehaviour {
@@ -19,12 +20,13 @@ public class LapShower : MonoBehaviour {
 	void Update () {
         text.text = Meta.vueltaActual + "/" + numeroDeVueltas;
 
-        if (Meta.vueltaActual > numeroDeVueltas)
+        if (Meta.vueltaActual > 0)
             Victory();
 	}
 
     private void Victory()
     {
-        Debug.Log("Victory");
+        string sceneName = PlayerPrefs.GetString("lastLoadedScene");
+        SceneManager.LoadScene(sceneName);//back to previous scene1?
     }
 }

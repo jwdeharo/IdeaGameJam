@@ -24,8 +24,10 @@ public class MechanicManager : MonoBehaviour
 
     private E_MECHANICS[] MyMechanics;
     private E_MECHANICS[] ActiveMechanics;
-    private int CurrentLeftMechanic;
-    private int CurrentRighttMechanic;
+    public int CurrentLeftMechanic;
+    public int CurrentRighttMechanic;
+    private Dictionary<E_MECHANICS, int> NumberUsedMechanics;
+    public List<E_MECHANICS> UnlockedMechanics;
 
 
     // Use this for initialization
@@ -124,8 +126,4 @@ public class MechanicManager : MonoBehaviour
     }
 }
 
-    private E_MECHANICS[] ActiveMechanics;
-    private Dictionary<E_MECHANICS, int> NumberUsedMechanics;
-    private int CurrentLeftMechanic;
-    private int CurrentRighttMechanic;
-    public List<E_MECHANICS> UnlockedMechanics;
+    
