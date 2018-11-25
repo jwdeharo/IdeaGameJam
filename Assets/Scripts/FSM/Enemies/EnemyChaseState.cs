@@ -51,7 +51,7 @@ public class EnemyChaseState : EnemyBaseState, IState
         Vector3 DistanceToWaypoint = ThePlayer.transform.position - MyGameObject.transform.position;
         MyEnemyController.Move(DistanceToWaypoint);
 
-        if (DistanceToWaypoint.magnitude > 5.0f)
+        if (DistanceToWaypoint.magnitude > 10.0f)
         {
             MyFsm.SetFSMCondition("start_chasing", false);
         }
