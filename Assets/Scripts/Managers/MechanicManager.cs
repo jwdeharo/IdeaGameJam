@@ -35,8 +35,7 @@ public class MechanicManager : MonoBehaviour
     {
         NumberUsedMechanics     = new Dictionary<E_MECHANICS, int>();
         UnlockedMechanics       = new List<E_MECHANICS>();
-
-
+        
         for (int i = 0; i < (int)E_MECHANICS.NUM_MECHANICS; ++i)
         {
             NumberUsedMechanics.Add((E_MECHANICS)i, 0);
@@ -56,23 +55,21 @@ public class MechanicManager : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        Debug.Log(GetUsefulMechanics());
-
         if (GetUsefulMechanics() > 1)
         {
             if (UnlockedMechanics[CurrentRighttMechanic] == ActiveMechanics[0])
             {
                 UpdateRightMechanic();
+                ActiveMechanics[1] = UnlockedMechanics[CurrentRighttMechanic];
             }
 
             if (UnlockedMechanics[CurrentLeftMechanic] == ActiveMechanics[1])
             {
                 UpdateLeftMechanic();
+                ActiveMechanics[0] = UnlockedMechanics[CurrentLeftMechanic];
             }
         }
 
-        ActiveMechanics[0] = UnlockedMechanics[CurrentLeftMechanic];
-        ActiveMechanics[1] = UnlockedMechanics[CurrentRighttMechanic];
     }
 
     public int GetUsefulMechanics()
@@ -154,6 +151,17 @@ public class MechanicManager : MonoBehaviour
         else
         {
             CurrentRighttMechanic = 0;
+        }
+    }
+
+    public void UnlockMechanic(E_MECHANICS aMechanic)
+    {
+        UnlockedMechanics[(int)aMechanic] = aMechanic;
+
+        if (ActiveMechanics[1] == E_MECHANICS.NONE_MECHANIC)
+        {
+            Debug.Log(aMechanic);
+            ActiveMechanics[1] = aMechanic;
         }
     }
 }

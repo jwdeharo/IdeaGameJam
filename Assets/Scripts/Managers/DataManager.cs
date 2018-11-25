@@ -4,8 +4,5 @@ using UnityEngine;
 
 public static class DataManager
 {
-    public static void GetMechanic(MechanicManager.E_MECHANICS aMechanic)
-    {
-        GameObject Player = GameObject.Find("Player");
-    }
+    public static MechanicManager.E_MECHANICS CurrentMechanic = MechanicManager.E_MECHANICS.NONE_MECHANIC;
 }

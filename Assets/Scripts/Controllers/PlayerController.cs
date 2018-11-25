@@ -134,6 +134,12 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (DataManager.CurrentMechanic != MechanicManager.E_MECHANICS.NONE_MECHANIC)
+        {
+            Debug.Log(DataManager.CurrentMechanic);
+            MyMechanicManager.UnlockMechanic(DataManager.CurrentMechanic);
+            DataManager.CurrentMechanic = MechanicManager.E_MECHANICS.NONE_MECHANIC;
+        }
 
         //If the input is different from 0, then this means that we're moving.
         if (InputManager.GetJoystickMovement() != Vector3.zero && !MyFsmMachine.IsState("Dash") && !MyFsmMachine.IsState("Cut") && !MyFsmMachine.IsState("Stunned") && !MyFsmMachine.IsState("Shoot"))
