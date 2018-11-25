@@ -72,10 +72,11 @@ public class PlayerController : MonoBehaviour
         CCondition IdleToShootSlow = new CCondition("is_shootingSlow", MyShootingStateSlow, true, false);
         CCondition ShootSlowToIdle = new CCondition("is_shootingSlow", MyIdleState, false, false);
         CCondition MoveToShootSlow = new CCondition("is_shootingSlow", MyShootingStateSlow, true, false);
+        CCondition ShootSlowToMove = new CCondition("is_shootingSlow", MyMoveState, false, false);
         CCondition IdleToStunned = new CCondition("is_stunned", MyStunnedState, true, false);
         CCondition MoveToStunned = new CCondition("is_stunned", MyStunnedState, true, false);
         CCondition CutToStunned = new CCondition("is_stunned", MyStunnedState, true, false);
-        CCondition StunnedToIdle = new CCondition("is_stunned", MyMoveState, false, false);
+        CCondition StunnedToIdle = new CCondition("is_stunned", MyIdleState, false, false);
 
         MyFsmMachine.AddState("Idle", MyIdleState);
         MyFsmMachine.AddState("Move", MyMoveState);
@@ -106,6 +107,7 @@ public class PlayerController : MonoBehaviour
         MyFsmMachine.AddCondition(MyStunnedState, StunnedToIdle);
 
         MyFsmMachine.AddCondition(MyShootingStateSlow, ShootSlowToIdle);
+        MyFsmMachine.AddCondition(MyShootingStateSlow, ShootSlowToMove);
 
         MyFsmMachine.AddCondition(MyCutState, CutToStunned);
 
