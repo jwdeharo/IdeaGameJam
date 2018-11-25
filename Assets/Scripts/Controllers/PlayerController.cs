@@ -83,6 +83,7 @@ public class PlayerController : MonoBehaviour
         MyFsmMachine.AddState("ShootSlow",    MyShootingStateSlow);
         CCondition IdleToStunned = new CCondition("is_stunned", MyStunnedState, true, false);
         CCondition MoveToStunned = new CCondition("is_stunned", MyStunnedState, true, false);
+        CCondition CutToStunned = new CCondition("is_stunned", MyStunnedState, true, false);
         CCondition StunnedToIdle = new CCondition("is_stunned", MyMoveState, false, false);
         
         MyFsmMachine.AddState("Idle",       MyIdleState);
@@ -102,13 +103,6 @@ public class PlayerController : MonoBehaviour
         MyFsmMachine.AddCondition(MyMoveState, MoveToStunned);
         MyFsmMachine.AddCondition(MyDashState, DashToIdle);
         MyFsmMachine.AddCondition(MyCutState, CutToIdle);
-        MyFsmMachine.AddCondition(MyMoveState, MoveToCut);
-        MyFsmMachine.AddCondition(MyIdleState, IdleToTP);
-        MyFsmMachine.AddCondition(MyTeleportState, TPToIdle);
-        MyFsmMachine.AddCondition(MyMoveState, MoveToTp);
-        MyFsmMachine.AddCondition(MyIdleState, IdleToShoot);
-        MyFsmMachine.AddCondition(MyShootingState, ShootToIdle);
-        MyFsmMachine.AddCondition(MyMoveState, MoveToShoot);
         MyFsmMachine.AddCondition(MyStunnedState, StunnedToIdle);
         MyFsmMachine.AddCondition(MyIdleState, IdleToShootSlow);
         MyFsmMachine.AddCondition(MyShootingStateSlow, ShootSlowToIdle);
@@ -146,13 +140,16 @@ public class PlayerController : MonoBehaviour
             MyFsmMachine.SetFSMCondition("is_moving", false);
         }
 
-        if (InputManager.FirstMechanicPressed())
+        if (!MyFsmMachine.IsState("Stunned") && !MyFsmMachine.IsState("Dash") && !MyFsmMachine.IsState("Cut"))
         {
-            ActivateMechanic(0);
-        }
-        else if (InputManager.SecondMechanicPressed())
-        {
-            ActivateMechanic(1);
+            if (InputManager.FirstMechanicPressed())
+            {
+                ActivateMechanic(0);
+            }
+            else if (InputManager.SecondMechanicPressed())
+            {
+                ActivateMechanic(1);
+            }
         }
 
         if (SensibilityTrigger == 0.0f && InputManager.ChangeMechanic(ref SensibilityTrigger))
@@ -177,6 +174,7 @@ public class PlayerController : MonoBehaviour
         switch (MyMechanicManager.GetMyMechanics()[aMechanicIndex])
         {
             case MechanicManager.E_MECHANICS.DASH:
+
                 MyFsmMachine.SetFSMCondition("is_dashing", true);
                 break;
             case MechanicManager.E_MECHANICS.CUT:
@@ -282,3 +280,5 @@ public class PlayerController : MonoBehaviour
         return ToCut;
     }
 }
+
+        MyFsmMachine.AddCondition(MyCutState, CutToStunned);
