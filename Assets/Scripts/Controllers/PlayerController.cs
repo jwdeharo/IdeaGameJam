@@ -145,7 +145,13 @@ public class PlayerController : MonoBehaviour
                 MyFsmMachine.SetFSMCondition("is_cutting", true);
                 if (ToCut != null)
                 {
-                    Destroy(ToCut);
+                    FSM EnemyFsm = ToCut.GetComponent<FSM>();
+
+                    if (EnemyFsm != null)
+                    {
+                        Debug.Log("cut");
+                        EnemyFsm.SetFSMCondition("time_to_die", true);
+                    }
                 }
                 break;
         }

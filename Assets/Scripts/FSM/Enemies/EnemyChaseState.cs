@@ -63,10 +63,10 @@ public class EnemyChaseState : EnemyBaseState, IState
         {
             MyFsm.SetFSMCondition("start_chasing", false);
         }
-        else if (DistanceToWaypoint.magnitude < 2.0f)
+        else if (DistanceToWaypoint.magnitude < 1.0f)
         {
-            int RandomValue = Random.Range(0, 100);
-            if (RandomValue < 5)
+            int RandomValue = Random.Range(0, 1000);
+            if (RandomValue == 1)
             {
                 IsShocking = true;
                 MyFsm.SetFSMCondition("start_shock", true);

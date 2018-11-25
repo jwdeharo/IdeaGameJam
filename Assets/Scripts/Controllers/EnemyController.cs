@@ -5,17 +5,18 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
 
-    private EnemyIdleState MyIdleState;
-    private EnemyPatrolState MyPatrolState;
-    private EnemyChaseState MyChaseState;
-    private EnemyShockState MyShockState;
+    private EnemyIdleState      MyIdleState;
+    private EnemyPatrolState    MyPatrolState;
+    private EnemyChaseState     MyChaseState;
+    private EnemyShockState     MyShockState;
+    private EnemyDieState       MyDieState;
 
     private CharacterController MyController;
-    private FSM MyFsm;
-    public GameObject Me;
+    private FSM                 MyFsm;
+    public GameObject           Me;
 
-    public float MoveSpeed;
-    public string Name;
+    public float                MoveSpeed;
+    public string               Name;
 
     // Use this for initialization
     void Start()
@@ -24,15 +25,17 @@ public class EnemyController : MonoBehaviour
         MyController = GetComponent<CharacterController>();
 
         //Init of the enemy states.
-        MyIdleState = new EnemyIdleState();
-        MyPatrolState = new EnemyPatrolState();
-        MyChaseState = new EnemyChaseState();
-        MyShockState = new EnemyShockState();
+        MyIdleState     = new EnemyIdleState();
+        MyPatrolState   = new EnemyPatrolState();
+        MyChaseState    = new EnemyChaseState();
+        MyShockState    = new EnemyShockState();
+        MyDieState      = new EnemyDieState();
 
         MyIdleState.SetMyGameObject(Me);
         MyPatrolState.SetMyGameObject(Me);
         MyChaseState.SetMyGameObject(Me);
         MyShockState.SetMyGameObject(Me);
+        MyDieState.SetMyGameObject(Me);
 
         for (int ChildIndex = 0; ChildIndex < transform.childCount; ChildIndex++)
         {
@@ -47,11 +50,16 @@ public class EnemyController : MonoBehaviour
         CCondition ChaseToIdle = new CCondition("start_chasing", MyIdleState, false, false);
         CCondition ChaseToShock = new CCondition("start_shock", MyShockState, true, false);
         CCondition ShockToChase = new CCondition("start_shock", MyChaseState, false, false);
+        CCondition PatrolToDieState = new CCondition("time_to_die", MyDieState, true, false);
+        CCondition IdleToDieState = new CCondition("time_to_die", MyDieState, true, false);
+        CCondition ShockToDieState = new CCondition("time_to_die", MyDieState, true, false);
+        CCondition ChaseToDieState = new CCondition("time_to_die", MyDieState, true, false);
 
         MyFsm.AddState("Idle", MyIdleState);
         MyFsm.AddState("Patrol", MyPatrolState);
         MyFsm.AddState("Chase", MyPatrolState);
         MyFsm.AddState("Shock", MyChaseState);
+        MyFsm.AddState("Die", MyDieState);
 
         MyFsm.AddCondition(MyIdleState, IdleToPatrol);
         MyFsm.AddCondition(MyIdleState, IdleToChase);
@@ -60,6 +68,10 @@ public class EnemyController : MonoBehaviour
         MyFsm.AddCondition(MyChaseState, ChaseToIdle);
         MyFsm.AddCondition(MyChaseState, ChaseToShock);
         MyFsm.AddCondition(MyShockState, ShockToChase);
+        MyFsm.AddCondition(MyIdleState, IdleToDieState);
+        MyFsm.AddCondition(MyChaseState, ChaseToDieState);
+        MyFsm.AddCondition(MyPatrolState, PatrolToDieState);
+        MyFsm.AddCondition(MyShockState, ShockToDieState);
     }
 
     // Update is called once per frame
@@ -94,8 +106,9 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    public void AnimationHasEnded()
+    public void DestroyMe(GameObject aToDestroy)
     {
-        Debug.Log("SHOCKSHOCK");
+        Destroy(aToDestroy);
     }
 }
+
