@@ -135,6 +135,9 @@ public class PlayerController : MonoBehaviour
 
     private void ActivateMechanic(int aMechanicIndex)
     {
+        MyMechanicManager.MechanicUsed((MechanicManager.E_MECHANICS)aMechanicIndex);
+        Debug.Log(((MechanicManager.E_MECHANICS)aMechanicIndex).ToString() + "Has been used " + MyMechanicManager.GetMechanicUsedTimes((MechanicManager.E_MECHANICS)aMechanicIndex));
+
         switch (MyMechanicManager.GetMyMechanics()[aMechanicIndex])
         {
             case MechanicManager.E_MECHANICS.DASH:

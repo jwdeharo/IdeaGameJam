@@ -18,6 +18,7 @@ public class MechanicManager : MonoBehaviour
 
     private E_MECHANICS[] MyMechanics;
     private E_MECHANICS[] ActiveMechanics;
+    private Dictionary<E_MECHANICS, int> NumberUsedMechanics;
     private int CurrentLeftMechanic;
     private int CurrentRighttMechanic;
 
@@ -26,10 +27,13 @@ public class MechanicManager : MonoBehaviour
     void Start ()
     {
         MyMechanics             = new E_MECHANICS[(int)E_MECHANICS.NUM_MECHANICS];
-        
+        NumberUsedMechanics     = new Dictionary<E_MECHANICS, int>();
+
+
         for (int i = 0; i < (int)E_MECHANICS.NUM_MECHANICS; ++i)
         {
             MyMechanics[i] = (E_MECHANICS)i;
+            NumberUsedMechanics.Add((E_MECHANICS)i, 0);
         }
 
         ActiveMechanics         = new E_MECHANICS[2];
@@ -59,6 +63,16 @@ public class MechanicManager : MonoBehaviour
     public E_MECHANICS[] GetMyMechanics()
     {
         return ActiveMechanics;
+    }
+
+    public void MechanicUsed(E_MECHANICS aMechanic)
+    {
+        NumberUsedMechanics[aMechanic]++;
+    }
+
+    public int GetMechanicUsedTimes(E_MECHANICS aMechanic)
+    {
+        return NumberUsedMechanics[aMechanic];
     }
 
     public void UpdateLeftMechanic()
