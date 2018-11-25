@@ -8,6 +8,7 @@ public class EnemyController : MonoBehaviour
     private EnemyIdleState MyIdleState;
     private EnemyPatrolState MyPatrolState;
     private EnemyChaseState MyChaseState;
+    private EnemyShockState MyShockState;
 
     private CharacterController MyController;
     private FSM MyFsm;
@@ -26,10 +27,12 @@ public class EnemyController : MonoBehaviour
         MyIdleState = new EnemyIdleState();
         MyPatrolState = new EnemyPatrolState();
         MyChaseState = new EnemyChaseState();
+        MyShockState = new EnemyShockState();
 
         MyIdleState.SetMyGameObject(Me);
         MyPatrolState.SetMyGameObject(Me);
         MyChaseState.SetMyGameObject(Me);
+        MyShockState.SetMyGameObject(Me);
 
         for (int ChildIndex = 0; ChildIndex < transform.childCount; ChildIndex++)
         {
@@ -42,23 +45,27 @@ public class EnemyController : MonoBehaviour
         CCondition PatrolToIdle = new CCondition("start_patrol", MyIdleState, false, false);
         CCondition PatrolToChase = new CCondition("start_chasing", MyChaseState, true, false);
         CCondition ChaseToIdle = new CCondition("start_chasing", MyIdleState, false, false);
+        CCondition ChaseToShock = new CCondition("start_shock", MyShockState, true, false);
+        CCondition ShockToChase = new CCondition("start_shock", MyChaseState, false, false);
 
         MyFsm.AddState("Idle", MyIdleState);
         MyFsm.AddState("Patrol", MyPatrolState);
         MyFsm.AddState("Chase", MyPatrolState);
+        MyFsm.AddState("Shock", MyChaseState);
 
         MyFsm.AddCondition(MyIdleState, IdleToPatrol);
         MyFsm.AddCondition(MyIdleState, IdleToChase);
         MyFsm.AddCondition(MyPatrolState, PatrolToIdle);
         MyFsm.AddCondition(MyPatrolState, PatrolToChase);
         MyFsm.AddCondition(MyChaseState, ChaseToIdle);
+        MyFsm.AddCondition(MyChaseState, ChaseToShock);
+        MyFsm.AddCondition(MyShockState, ShockToChase);
     }
 
     // Update is called once per frame
     void Update()
     {
         //In the idle state we wait to start patrolling.
-
     }
 
     // Each state will call this function and will move according its characteristics.
@@ -85,5 +92,10 @@ public class EnemyController : MonoBehaviour
                 MyFsm.SetFSMCondition("start_chasing", true);
             }
         }
+    }
+
+    public void AnimationHasEnded()
+    {
+        Debug.Log("SHOCKSHOCK");
     }
 }

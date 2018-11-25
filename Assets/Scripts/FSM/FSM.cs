@@ -56,6 +56,11 @@ public class FSM : MonoBehaviour
         StackOfStates.RemoveAt(0);
     }
 
+    public void proba()
+    {
+
+    }
+
     private List<CCondition> GetConditionList(IState aState)
     {
         List<CCondition> ReturnListCondition = new List<CCondition>();

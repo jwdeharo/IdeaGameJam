@@ -19,8 +19,7 @@ public class EnemyIdleState : EnemyBaseState, IState
         }
 
     }
-
-
+    
     public void OnExitState()
     {
         TimeWaiting = TimeToWait;
@@ -31,7 +30,6 @@ public class EnemyIdleState : EnemyBaseState, IState
     {
         if (TimeWaiting <= 0.0f)
         {
-            
             MyFsm.SetFSMCondition("start_patrol", true);
         }
         else
