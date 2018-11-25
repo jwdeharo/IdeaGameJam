@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
     private MoveState MyMoveState;
     private DashState MyDashState;
     private CutState MyCutState;
+    private StunnedState MyStunnedState;
+
     private Vector3 MyDirection;
     private MechanicManager MyMechanicManager;
     private GameObject ToCut;
@@ -35,10 +37,11 @@ public class PlayerController : MonoBehaviour
         MyMechanicManager = GetComponent<MechanicManager>();
 
         ////We start the states here.
-        MyIdleState = new IdleState();
-        MyMoveState = new MoveState();
-        MyDashState = new DashState();
-        MyCutState  = new CutState();
+        MyIdleState     = new IdleState();
+        MyMoveState     = new MoveState();
+        MyDashState     = new DashState();
+        MyCutState      = new CutState();
+        MyStunnedState  = new StunnedState();
 
         //We define conditions to change between states here.
         CCondition IdleToMove = new CCondition("is_moving", MyMoveState, true, false);
@@ -50,21 +53,28 @@ public class PlayerController : MonoBehaviour
         CCondition CutToIdle = new CCondition("is_cutting", MyIdleState, false, false);
         CCondition CutToMove = new CCondition("is_cutting", MyMoveState, false, false);
         CCondition MoveToCut = new CCondition("is_cutting", MyCutState, true, false);
+        CCondition IdleToStunned = new CCondition("is_stunned", MyStunnedState, true, false);
+        CCondition MoveToStunned = new CCondition("is_stunned", MyStunnedState, true, false);
+        CCondition StunnedToIdle = new CCondition("is_stunned", MyMoveState, false, false);
         
-        MyFsmMachine.AddState("Idle",   MyIdleState);
-        MyFsmMachine.AddState("Move",   MyMoveState);
-        MyFsmMachine.AddState("Dash",   MyDashState);
-        MyFsmMachine.AddState("Cut",    MyCutState);
+        MyFsmMachine.AddState("Idle",       MyIdleState);
+        MyFsmMachine.AddState("Move",       MyMoveState);
+        MyFsmMachine.AddState("Dash",       MyDashState);
+        MyFsmMachine.AddState("Cut",        MyCutState);
+        MyFsmMachine.AddState("Stunned",    MyStunnedState);
 
         //This relates the states with their conditions.
         MyFsmMachine.AddCondition(MyIdleState, IdleToMove);
         MyFsmMachine.AddCondition(MyIdleState, IdleToDash);
         MyFsmMachine.AddCondition(MyIdleState, IdleToCut);
+        MyFsmMachine.AddCondition(MyIdleState, IdleToStunned);
         MyFsmMachine.AddCondition(MyMoveState, MoveToIdle);
         MyFsmMachine.AddCondition(MyMoveState, MoveToDash);
+        MyFsmMachine.AddCondition(MyMoveState, MoveToCut);
+        MyFsmMachine.AddCondition(MyMoveState, MoveToStunned);
         MyFsmMachine.AddCondition(MyDashState, DashToIdle);
         MyFsmMachine.AddCondition(MyCutState, CutToIdle);
-        MyFsmMachine.AddCondition(MyMoveState, MoveToCut);
+        MyFsmMachine.AddCondition(MyStunnedState, StunnedToIdle);
 
         MyDirection = Vector3.zero;
         FacingRight = true;
@@ -76,17 +86,10 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!CanMove)
-        {
-            Timer += Time.deltaTime;
-            if (Timer >= 2.0f) 
-            {
-                CanMove = true;
-            }
-        }
+
         
         //If the input is different from 0, then this means that we're moving.
-        if (InputManager.GetJoystickMovement() != Vector3.zero && !MyFsmMachine.IsState("Dash") && !MyFsmMachine.IsState("Cut") && CanMove)
+        if (InputManager.GetJoystickMovement() != Vector3.zero && !MyFsmMachine.IsState("Dash") && !MyFsmMachine.IsState("Cut") && !MyFsmMachine.IsState("Stunned"))
         {
             MyFsmMachine.SetFSMCondition("is_moving", true);
         }

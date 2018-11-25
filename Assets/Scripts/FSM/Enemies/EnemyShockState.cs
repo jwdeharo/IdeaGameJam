@@ -48,18 +48,26 @@ public class EnemyShockState : EnemyBaseState, IState
 
         if (!HasBeenStunned && DistanceToWaypoint.magnitude < 2.0f)
         {
-            PlayerController Controller = ThePlayer.GetComponent<PlayerController>();
-            Controller.CanMove = false;
+            FSM PlayerFSM = ThePlayer.GetComponent<FSM>();
+
+            PlayerFSM.SetFSMCondition("is_stunned", true);
             HasBeenStunned = true;
+            Timer = 2.0f;
         }
         else if (HasBeenStunned)
         {
-            Timer += Time.deltaTime;
+            FSM PlayerFSM = ThePlayer.GetComponent<FSM>();
 
-            if (Timer >= 10.0f)
+            if (!PlayerFSM.IsState("Stunned"))
             {
-                HasBeenStunned = false;
-                Timer = 0.0f;
+                if (Timer <= 0.0f)
+                {
+                    HasBeenStunned = false;
+                }
+                else
+                {
+                    Timer -= Time.deltaTime;
+                }
             }
         }
         
