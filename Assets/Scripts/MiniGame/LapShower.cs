@@ -15,13 +15,14 @@ public class LapShower : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         text = GetComponent<Text>();
+        numeroDeVueltas = GameObject.FindObjectsOfType<Meta>().Length;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        text.text = Meta.vueltaActual + "/" + numeroDeVueltas;
+        text.text = Meta.metasCompletadas + "/" + numeroDeVueltas;
 
-        if (Meta.vueltaActual > 0)
+        if (Meta.metasCompletadas == numeroDeVueltas)
             Victory();
 	}
 

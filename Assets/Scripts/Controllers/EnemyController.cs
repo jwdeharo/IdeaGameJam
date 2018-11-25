@@ -5,18 +5,18 @@ using UnityEngine;
 public class EnemyController : BaseController
 {
 
-    private EnemyIdleState      MyIdleState;
-    private EnemyPatrolState    MyPatrolState;
-    private EnemyChaseState     MyChaseState;
-    private EnemyShockState     MyShockState;
-    private EnemyDieState       MyDieState;
-    private EnemyDashState      MyDashState;
-    private EnemyCutState       MyCutState;
-    private EnemyShootState     MyShootState;
+    private EnemyIdleState MyIdleState;
+    private EnemyPatrolState MyPatrolState;
+    private EnemyChaseState MyChaseState;
+    private EnemyShockState MyShockState;
+    private EnemyDieState MyDieState;
+    private EnemyDashState MyDashState;
+    private EnemyCutState MyCutState;
+    private EnemyShootState MyShootState;
 
     private CharacterController MyController;
-    private FSM                 MyFsm;
-    private MechanicManager     PlayerMechanics;
+    private FSM MyFsm;
+    private MechanicManager PlayerMechanics;
 
     private List<MechanicManager.E_MECHANICS> CopiedMechanics;
 
@@ -85,14 +85,14 @@ public class EnemyController : BaseController
         CCondition PatrolToShoot = new CCondition("is_shooting", MyShootState, true, false);
         CCondition ShootToIdle = new CCondition("is_shooting", MyIdleState, false, false);
 
-        MyFsm.AddState("Idle",      MyIdleState);
-        MyFsm.AddState("Patrol",    MyPatrolState);
-        MyFsm.AddState("Chase",     MyChaseState);
-        MyFsm.AddState("Shock",     MyShockState);
-        MyFsm.AddState("Die",       MyDieState);
-        MyFsm.AddState("Cut",       MyCutState);
-        MyFsm.AddState("Dash",      MyDashState);
-        MyFsm.AddState("Shoot",     MyDashState);
+        MyFsm.AddState("Idle", MyIdleState);
+        MyFsm.AddState("Patrol", MyPatrolState);
+        MyFsm.AddState("Chase", MyChaseState);
+        MyFsm.AddState("Shock", MyShockState);
+        MyFsm.AddState("Die", MyDieState);
+        MyFsm.AddState("Cut", MyCutState);
+        MyFsm.AddState("Dash", MyDashState);
+        MyFsm.AddState("Shoot", MyDashState);
 
         MyFsm.AddCondition(MyIdleState, IdleToPatrol);
         MyFsm.AddCondition(MyIdleState, IdleToChase);
@@ -210,7 +210,7 @@ public class EnemyController : BaseController
         if (hit.gameObject.tag == "Player")
         {
             //If player gets hit. We will steal all his mechanics.
-            for (int i = 0; i <  PlayerMechanics.GetMyMechanics().Length; i++)
+            for (int i = 0; i < PlayerMechanics.GetMyMechanics().Length; i++)
             {
                 if (!CopiedMechanics.Contains(PlayerMechanics.GetMyMechanics()[i]))
                 {

@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class Meta : MonoBehaviour {
 
-    public static int vueltaActual;
+    public static int metasCompletadas;
 
-    public bool definitiva;
+    public bool primera;
     private bool leToca;
 
     public Meta siguiente;
@@ -18,17 +18,21 @@ public class Meta : MonoBehaviour {
 		if(leToca)
         {
             leToca = false;
-            siguiente.leToca = true;
-            if (definitiva)
-                vueltaActual++;
-            Debug.Log("Vuelta actual: "+vueltaActual);
+            GetComponent<SpriteRenderer>().enabled = false;
+            metasCompletadas++;
+            if (siguiente != null)
+            {
+                siguiente.leToca = true;
+                siguiente.GetComponent<SpriteRenderer>().enabled = true;
+            }
+            Debug.Log("Vuelta actual: "+metasCompletadas);
         }
 	}
 	
 	void Start () {
-        if (!definitiva)
-            GetComponent<SpriteRenderer>().enabled = false;
-        if (definitiva)
+        if (primera)
             leToca = true;
-	}
+        else
+            GetComponent<SpriteRenderer>().enabled = false;
+    }
 }
