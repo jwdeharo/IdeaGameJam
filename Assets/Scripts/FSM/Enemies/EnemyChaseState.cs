@@ -9,6 +9,7 @@ public class EnemyChaseState : EnemyBaseState, IState
     private GameObject ThePlayer;
     private EnemyController MyEnemyController;
     private Animator MyAnimator;
+    private bool IsShocking;
 
     public void OnEnterState()
     {
@@ -37,12 +38,19 @@ public class EnemyChaseState : EnemyBaseState, IState
             MyAnimator = MyGameObject.GetComponent<Animator>();
         }
 
+        IsShocking = false;
+
         MyAnimator.SetBool("Is_chasing", true);
     }
 
     public void OnExitState()
     {
-        MyAnimator.SetBool("Is_chasing", false);
+        if (!IsShocking)
+        {
+            MyAnimator.SetBool("Is_chasing", false);
+        }
+
+        MyFsm.PopState();
     }
 
     public void UpdateState()
@@ -54,6 +62,16 @@ public class EnemyChaseState : EnemyBaseState, IState
         if (DistanceToWaypoint.magnitude > 10.0f)
         {
             MyFsm.SetFSMCondition("start_chasing", false);
+        }
+        else if (DistanceToWaypoint.magnitude < 2.0f)
+        {
+            int RandomValue = Random.Range(0, 100);
+            if (RandomValue < 5)
+            {
+                IsShocking = true;
+                MyFsm.SetFSMCondition("start_shock", true);
+            }
+
         }
     }
 }
