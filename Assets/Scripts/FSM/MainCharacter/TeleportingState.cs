@@ -39,8 +39,8 @@ public class TeleportingState : IState {
     {
         if (timeRemaining <= 0.0f)
         {
-            MyFsm.SetFSMCondition("is_teleporting", false);
-            Vector3 TpMovement = MyPlayerController.GetDirection() * 1000;
+            MyFsm.SetFSMCondition("is_tping", false);
+            Vector3 TpMovement = MyPlayerController.GetDirection() * 300;
             MyPlayerController.Move(TpMovement, true);
         }
         else

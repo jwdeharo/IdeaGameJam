@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     private MoveState MyMoveState;
     private DashState MyDashState;
     private CutState MyCutState;
+    private TeleportingState MyTeleportState;
     private Vector3 MyDirection;
     private MechanicManager MyMechanicManager;
     private GameObject ToCut;
@@ -37,6 +38,7 @@ public class PlayerController : MonoBehaviour
         MyMoveState = new MoveState();
         MyDashState = new DashState();
         MyCutState  = new CutState();
+        MyTeleportState = new TeleportingState();
 
         //We define conditions to change between states here.
         CCondition IdleToMove = new CCondition("is_moving", MyMoveState, true, false);
@@ -48,11 +50,14 @@ public class PlayerController : MonoBehaviour
         CCondition CutToIdle = new CCondition("is_cutting", MyIdleState, false, false);
         CCondition CutToMove = new CCondition("is_cutting", MyMoveState, false, false);
         CCondition MoveToCut = new CCondition("is_cutting", MyCutState, true, false);
-        
+        CCondition IdleToTP = new CCondition("is_tping", MyTeleportState, true, false);
+        CCondition TPToIdle = new CCondition("is_tping", MyIdleState, false, false);
+
         MyFsmMachine.AddState("Idle",   MyIdleState);
         MyFsmMachine.AddState("Move",   MyMoveState);
         MyFsmMachine.AddState("Dash",   MyDashState);
         MyFsmMachine.AddState("Cut",    MyCutState);
+        MyFsmMachine.AddState("TP",    MyTeleportState);
 
         //This relates the states with their conditions.
         MyFsmMachine.AddCondition(MyIdleState, IdleToMove);
@@ -63,6 +68,8 @@ public class PlayerController : MonoBehaviour
         MyFsmMachine.AddCondition(MyDashState, DashToIdle);
         MyFsmMachine.AddCondition(MyCutState, CutToIdle);
         MyFsmMachine.AddCondition(MyMoveState, MoveToCut);
+        MyFsmMachine.AddCondition(MyIdleState, IdleToTP);
+        MyFsmMachine.AddCondition(MyTeleportState, TPToIdle);
 
         MyDirection = Vector3.zero;
         FacingRight = true;
@@ -124,7 +131,7 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("CUUT");
                 break;
             case MechanicManager.E_MECHANICS.CHARGE_TELEPORT:
-                Debug.Log("TP");
+                MyFsmMachine.SetFSMCondition("is_tping", true);
                 break;
         }
     }
