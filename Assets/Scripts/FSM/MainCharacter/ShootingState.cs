@@ -13,6 +13,13 @@ public class ShootingState : IState {
     private GameObject ThePlayer;
 
     private GameObject bullet;
+    private string condition;
+
+    public ShootingState(GameObject bullet, string condition)
+    {
+        this.bullet = bullet;
+        this.condition = condition;
+    }
 
     public void OnEnterState()
     {
@@ -35,14 +42,13 @@ public class ShootingState : IState {
 
         timeRemaining = TIME_TO_SHOOT;
         MyPlayerController.GetMyAnimator().SetBool("Is_Dashing", true);
-        bullet = (GameObject) Resources.Load("Projectile");
     }
 
     public void UpdateState()
     {
         if (timeRemaining <= 0.0f)
         {
-            MyFsm.SetFSMCondition("is_shooting", false);
+            MyFsm.SetFSMCondition(condition, false);
             Vector3 DirectionOfShooting = MyPlayerController.GetDirection().normalized;
             MyPlayerController.Shoot(bullet, DirectionOfShooting);
         }

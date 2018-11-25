@@ -24,10 +24,16 @@ public class Bullet : MonoBehaviour {
         Debug.Log("Just crashed with: " + ColTag);
         if (ColTag .CompareTo( "Enemy")==0)
         {
-            Destroy(col.gameObject.transform.parent.gameObject);
+            Affect(col);
         }
         Destroy(gameObject);
     }
+
+    protected virtual void Affect(Collider col)
+    {
+        Destroy(col.gameObject.transform.parent.gameObject);
+    }
+
     private void OnCollisionEnter(Collision col)
     {
         Debug.Log("Collision with!: "+col.gameObject.name);

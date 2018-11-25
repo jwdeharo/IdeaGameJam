@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     private CutState MyCutState;
     private TeleportingState MyTeleportState;
     private ShootingState MyShootingState;
+    private ShootingState MyShootingStateSlow;
     private StunnedState MyStunnedState;
 
     private Vector3 MyDirection;
@@ -45,7 +46,8 @@ public class PlayerController : MonoBehaviour
         MyDashState = new DashState();
         MyCutState  = new CutState();
         MyTeleportState = new TeleportingState();
-        MyShootingState = new ShootingState();
+        MyShootingState = new ShootingState((GameObject)Resources.Load("Projectile"), "is_shooting");
+        MyShootingStateSlow = new ShootingState((GameObject)Resources.Load("ProjectileSlow"), "is_shootingSlow");
         MyIdleState     = new IdleState();
         MyMoveState     = new MoveState();
         MyDashState     = new DashState();
@@ -68,12 +70,17 @@ public class PlayerController : MonoBehaviour
         CCondition IdleToShoot = new CCondition("is_shooting", MyShootingState, true, false);
         CCondition ShootToIdle = new CCondition("is_shooting", MyIdleState, false, false);
         CCondition MoveToShoot = new CCondition("is_shooting", MyShootingState, true, false);
+        CCondition IdleToShootSlow = new CCondition("is_shootingSlow", MyShootingStateSlow, true, false);
+        CCondition ShootSlowToIdle = new CCondition("is_shootingSlow", MyIdleState, false, false);
+        CCondition MoveToShootSlow = new CCondition("is_shootingSlow", MyShootingStateSlow, true, false);
 
         MyFsmMachine.AddState("Idle",   MyIdleState);
         MyFsmMachine.AddState("Move",   MyMoveState);
         MyFsmMachine.AddState("Dash",   MyDashState);
         MyFsmMachine.AddState("Cut",    MyCutState);
         MyFsmMachine.AddState("TP",    MyTeleportState);
+        MyFsmMachine.AddState("Shoot",    MyShootingState);
+        MyFsmMachine.AddState("ShootSlow",    MyShootingStateSlow);
         CCondition IdleToStunned = new CCondition("is_stunned", MyStunnedState, true, false);
         CCondition MoveToStunned = new CCondition("is_stunned", MyStunnedState, true, false);
         CCondition StunnedToIdle = new CCondition("is_stunned", MyMoveState, false, false);
@@ -103,6 +110,9 @@ public class PlayerController : MonoBehaviour
         MyFsmMachine.AddCondition(MyShootingState, ShootToIdle);
         MyFsmMachine.AddCondition(MyMoveState, MoveToShoot);
         MyFsmMachine.AddCondition(MyStunnedState, StunnedToIdle);
+        MyFsmMachine.AddCondition(MyIdleState, IdleToShootSlow);
+        MyFsmMachine.AddCondition(MyShootingStateSlow, ShootSlowToIdle);
+        MyFsmMachine.AddCondition(MyMoveState, MoveToShootSlow);
 
         MyDirection = Vector3.zero;
         FacingRight = true;
@@ -182,6 +192,9 @@ public class PlayerController : MonoBehaviour
                 break;
             case MechanicManager.E_MECHANICS.SHOOT:
                 MyFsmMachine.SetFSMCondition("is_shooting", true);
+                break;
+            case MechanicManager.E_MECHANICS.SHOOT_SLOW:
+                MyFsmMachine.SetFSMCondition("is_shootingSlow", true);
                 break;
         }
     }
