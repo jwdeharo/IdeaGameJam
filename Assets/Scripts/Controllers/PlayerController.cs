@@ -55,6 +55,7 @@ public class PlayerController : MonoBehaviour
         CCondition MoveToCut = new CCondition("is_cutting", MyCutState, true, false);
         CCondition IdleToStunned = new CCondition("is_stunned", MyStunnedState, true, false);
         CCondition MoveToStunned = new CCondition("is_stunned", MyStunnedState, true, false);
+        CCondition CutToStunned = new CCondition("is_stunned", MyStunnedState, true, false);
         CCondition StunnedToIdle = new CCondition("is_stunned", MyMoveState, false, false);
         
         MyFsmMachine.AddState("Idle",       MyIdleState);
@@ -74,6 +75,7 @@ public class PlayerController : MonoBehaviour
         MyFsmMachine.AddCondition(MyMoveState, MoveToStunned);
         MyFsmMachine.AddCondition(MyDashState, DashToIdle);
         MyFsmMachine.AddCondition(MyCutState, CutToIdle);
+        MyFsmMachine.AddCondition(MyCutState, CutToStunned);
         MyFsmMachine.AddCondition(MyStunnedState, StunnedToIdle);
 
         MyDirection = Vector3.zero;
@@ -98,13 +100,16 @@ public class PlayerController : MonoBehaviour
             MyFsmMachine.SetFSMCondition("is_moving", false);
         }
 
-        if (InputManager.FirstMechanicPressed())
+        if (!MyFsmMachine.IsState("Stunned") && !MyFsmMachine.IsState("Dash") && !MyFsmMachine.IsState("Cut"))
         {
-            ActivateMechanic(0);
-        }
-        else if (InputManager.SecondMechanicPressed())
-        {
-            ActivateMechanic(1);
+            if (InputManager.FirstMechanicPressed())
+            {
+                ActivateMechanic(0);
+            }
+            else if (InputManager.SecondMechanicPressed())
+            {
+                ActivateMechanic(1);
+            }
         }
 
         if (SensibilityTrigger == 0.0f && InputManager.ChangeMechanic(ref SensibilityTrigger))
@@ -129,6 +134,7 @@ public class PlayerController : MonoBehaviour
         switch (MyMechanicManager.GetMyMechanics()[aMechanicIndex])
         {
             case MechanicManager.E_MECHANICS.DASH:
+
                 MyFsmMachine.SetFSMCondition("is_dashing", true);
                 break;
             case MechanicManager.E_MECHANICS.CUT:

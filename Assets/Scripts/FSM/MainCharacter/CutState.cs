@@ -48,8 +48,8 @@ public class CutState : IState
 
     public void OnExitState()
     {
-        MyAnimator.SetBool("Is_cutting", false);
         MyFsm.PopState();
+        MyAnimator.SetBool("Is_cutting", false);
     }
 
     public void UpdateState()
