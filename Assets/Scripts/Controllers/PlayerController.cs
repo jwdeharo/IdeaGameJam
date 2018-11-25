@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+
+
     //My finite state machine.
     private FSM MyFsmMachine;
     //Character controller that will help us to move and detect collisions.
@@ -13,6 +16,9 @@ public class PlayerController : MonoBehaviour
     private MoveState MyMoveState;
     private DashState MyDashState;
     private CutState MyCutState;
+    private TeleportingState MyTeleportState;
+    private ShootingState MyShootingState;
+    private ShootingState MyShootingStateSlow;
     private StunnedState MyStunnedState;
 
     private Vector3 MyDirection;
@@ -41,6 +47,9 @@ public class PlayerController : MonoBehaviour
         MyMoveState = new MoveState();
         MyDashState = new DashState();
         MyCutState = new CutState();
+        MyTeleportState = new TeleportingState();
+        MyShootingState = new ShootingState((GameObject)Resources.Load("Projectile"), "is_shooting");
+        MyShootingStateSlow = new ShootingState((GameObject)Resources.Load("ProjectileSlow"), "is_shootingSlow");
         MyStunnedState = new StunnedState();
 
         //We define conditions to change between states here.
@@ -53,6 +62,23 @@ public class PlayerController : MonoBehaviour
         CCondition CutToIdle = new CCondition("is_cutting", MyIdleState, false, false);
         CCondition CutToMove = new CCondition("is_cutting", MyMoveState, false, false);
         CCondition MoveToCut = new CCondition("is_cutting", MyCutState, true, false);
+        CCondition IdleToTP = new CCondition("is_tping", MyTeleportState, true, false);
+        CCondition TPToIdle = new CCondition("is_tping", MyIdleState, false, false);
+        CCondition MoveToTp = new CCondition("is_tping", MyTeleportState, true, false);
+        CCondition IdleToShoot = new CCondition("is_shooting", MyShootingState, true, false);
+        CCondition ShootToIdle = new CCondition("is_shooting", MyIdleState, false, false);
+        CCondition MoveToShoot = new CCondition("is_shooting", MyShootingState, true, false);
+        CCondition IdleToShootSlow = new CCondition("is_shootingSlow", MyShootingStateSlow, true, false);
+        CCondition ShootSlowToIdle = new CCondition("is_shootingSlow", MyIdleState, false, false);
+        CCondition MoveToShootSlow = new CCondition("is_shootingSlow", MyShootingStateSlow, true, false);
+
+        MyFsmMachine.AddState("Idle",   MyIdleState);
+        MyFsmMachine.AddState("Move",   MyMoveState);
+        MyFsmMachine.AddState("Dash",   MyDashState);
+        MyFsmMachine.AddState("Cut",    MyCutState);
+        MyFsmMachine.AddState("TP",    MyTeleportState);
+        MyFsmMachine.AddState("Shoot",    MyShootingState);
+        MyFsmMachine.AddState("ShootSlow",    MyShootingStateSlow);
         CCondition IdleToStunned = new CCondition("is_stunned", MyStunnedState, true, false);
         CCondition MoveToStunned = new CCondition("is_stunned", MyStunnedState, true, false);
         CCondition CutToStunned = new CCondition("is_stunned", MyStunnedState, true, false);
@@ -75,8 +101,11 @@ public class PlayerController : MonoBehaviour
         MyFsmMachine.AddCondition(MyMoveState, MoveToStunned);
         MyFsmMachine.AddCondition(MyDashState, DashToIdle);
         MyFsmMachine.AddCondition(MyCutState, CutToIdle);
-        MyFsmMachine.AddCondition(MyCutState, CutToStunned);
         MyFsmMachine.AddCondition(MyStunnedState, StunnedToIdle);
+        MyFsmMachine.AddCondition(MyIdleState, IdleToShootSlow);
+        MyFsmMachine.AddCondition(MyShootingStateSlow, ShootSlowToIdle);
+        MyFsmMachine.AddCondition(MyMoveState, MoveToShootSlow);
+        MyFsmMachine.AddCondition(MyCutState, CutToStunned);
 
         MyDirection = Vector3.zero;
         FacingRight = true;
@@ -84,6 +113,16 @@ public class PlayerController : MonoBehaviour
         CanMove = true;
         SensibilityTrigger = 0.0f;
         Timer = 0.0f;
+    }
+
+    internal void Shoot(GameObject bullet, Vector3 directionOfShooting)
+    {
+
+        Debug.Log(directionOfShooting);
+        GameObject instance = Instantiate(bullet, transform.position, Quaternion.identity);
+        instance.GetComponent<Bullet>().direction = directionOfShooting;
+        Physics.IgnoreCollision(GetComponentInChildren<SphereCollider>(), 
+            instance.GetComponent<Collider>());
     }
 
     private void FixedUpdate()
@@ -153,6 +192,16 @@ public class PlayerController : MonoBehaviour
                         EnemyFsm.SetFSMCondition("time_to_die", true);
                     }
                 }
+                Debug.Log("CUUT");
+                break;
+            case MechanicManager.E_MECHANICS.CHARGE_TELEPORT:
+                MyFsmMachine.SetFSMCondition("is_tping", true);
+                break;
+            case MechanicManager.E_MECHANICS.SHOOT:
+                MyFsmMachine.SetFSMCondition("is_shooting", true);
+                break;
+            case MechanicManager.E_MECHANICS.SHOOT_SLOW:
+                MyFsmMachine.SetFSMCondition("is_shootingSlow", true);
                 break;
         }
     }
@@ -212,11 +261,14 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider col)
     {
-        string ColTag = col.gameObject.transform.parent.gameObject.tag;
-        if (ColTag == "Enemy")
+        if (col.gameObject.transform.parent != null)
         {
-            ToCut = col.gameObject.transform.parent.gameObject;
-            CanCutEnemy = true;
+            string ColTag = col.gameObject.transform.parent.gameObject.tag;
+            if (ColTag == "Enemy")
+            {
+                ToCut = col.gameObject.transform.parent.gameObject;
+                CanCutEnemy = true;
+            }
         }
     }
 
@@ -240,3 +292,6 @@ public class PlayerController : MonoBehaviour
         return ToCut;
     }
 }
+
+
+        
