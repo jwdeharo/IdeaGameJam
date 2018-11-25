@@ -56,11 +56,6 @@ public class FSM : MonoBehaviour
         StackOfStates.RemoveAt(0);
     }
 
-    public void proba()
-    {
-
-    }
-
     private List<CCondition> GetConditionList(IState aState)
     {
         List<CCondition> ReturnListCondition = new List<CCondition>();
@@ -86,7 +81,6 @@ public class FSM : MonoBehaviour
             {
                 if (Condition.GetName().Equals(aName) && Condition.GetValue() != aConditionValue)
                 {
-
                     Condition.SetValue(aConditionValue);
                     if (ConditionState == StackOfStates[0])
                     {
