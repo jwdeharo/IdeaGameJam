@@ -23,7 +23,6 @@ public class MechanicManager : MonoBehaviour
 
     private const int ActivableMechanics = 2;
 
-    private E_MECHANICS[] MyMechanics;
     private E_MECHANICS[] ActiveMechanics;
     public int CurrentLeftMechanic;
     public int CurrentRighttMechanic;
@@ -34,24 +33,22 @@ public class MechanicManager : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-        MyMechanics             = new E_MECHANICS[(int)E_MECHANICS.NUM_MECHANICS];
         NumberUsedMechanics     = new Dictionary<E_MECHANICS, int>();
+        UnlockedMechanics       = new List<E_MECHANICS>();
 
 
         for (int i = 0; i < (int)E_MECHANICS.NUM_MECHANICS; ++i)
         {
-            MyMechanics[i] = E_MECHANICS.NONE_MECHANIC;
             NumberUsedMechanics.Add((E_MECHANICS)i, 0);
+            UnlockedMechanics.Add(E_MECHANICS.NONE_MECHANIC);
         }
 
         ActiveMechanics         = new E_MECHANICS[2];
-        MyMechanics[(int)E_MECHANICS.DASH]  = E_MECHANICS.DASH;
-        MyMechanics[(int)E_MECHANICS.CUT]   = E_MECHANICS.CUT;
         ActiveMechanics[0]      = E_MECHANICS.DASH;
-        ActiveMechanics[1]      = E_MECHANICS.SHOOT_SLOW;
-        UnlockedMechanics = new List<E_MECHANICS>();
-        UnlockedMechanics.Add(E_MECHANICS.DASH);
-        UnlockedMechanics.Add(E_MECHANICS.SHOOT_SLOW);
+        ActiveMechanics[1]      = E_MECHANICS.NONE_MECHANIC;
+
+        UnlockedMechanics[(int)E_MECHANICS.DASH] = E_MECHANICS.DASH;
+
         CurrentLeftMechanic     = 0;
         CurrentRighttMechanic   = 1;
     }
@@ -59,7 +56,9 @@ public class MechanicManager : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        if (UnlockedMechanics.Count > 1)
+        Debug.Log(GetUsefulMechanics());
+
+        if (GetUsefulMechanics() > 1)
         {
             if (UnlockedMechanics[CurrentRighttMechanic] == ActiveMechanics[0])
             {
@@ -93,14 +92,6 @@ public class MechanicManager : MonoBehaviour
 
     public void RemoveMechanics()
     {
-        for (int Index = 0; Index < MyMechanics.Length; Index++)
-        {
-            if (MyMechanics[Index] != E_MECHANICS.DASH)
-            {
-                MyMechanics[Index] = E_MECHANICS.NONE_MECHANIC;
-            }
-        }
-
         for (int Index = 0; Index < UnlockedMechanics.Count; Index++)
         {
             if (UnlockedMechanics[Index] != E_MECHANICS.DASH)
