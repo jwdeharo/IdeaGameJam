@@ -52,6 +52,7 @@ public class PlayerController : MonoBehaviour
         CCondition MoveToCut = new CCondition("is_cutting", MyCutState, true, false);
         CCondition IdleToTP = new CCondition("is_tping", MyTeleportState, true, false);
         CCondition TPToIdle = new CCondition("is_tping", MyIdleState, false, false);
+        CCondition MoveToTp = new CCondition("is_tping", MyTeleportState, true, false);
 
         MyFsmMachine.AddState("Idle",   MyIdleState);
         MyFsmMachine.AddState("Move",   MyMoveState);
@@ -70,6 +71,7 @@ public class PlayerController : MonoBehaviour
         MyFsmMachine.AddCondition(MyMoveState, MoveToCut);
         MyFsmMachine.AddCondition(MyIdleState, IdleToTP);
         MyFsmMachine.AddCondition(MyTeleportState, TPToIdle);
+        MyFsmMachine.AddCondition(MyMoveState, MoveToTp);
 
         MyDirection = Vector3.zero;
         FacingRight = true;
