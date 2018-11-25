@@ -5,18 +5,18 @@ using UnityEngine;
 public class EnemyController : BaseController
 {
 
-    private EnemyIdleState      MyIdleState;
-    private EnemyPatrolState    MyPatrolState;
-    private EnemyChaseState     MyChaseState;
-    private EnemyShockState     MyShockState;
-    private EnemyDieState       MyDieState;
-    private EnemyDashState      MyDashState;
-    private EnemyCutState       MyCutState;
-    private EnemyShootState     MyShootState;
+    private EnemyIdleState MyIdleState;
+    private EnemyPatrolState MyPatrolState;
+    private EnemyChaseState MyChaseState;
+    private EnemyShockState MyShockState;
+    private EnemyDieState MyDieState;
+    private EnemyDashState MyDashState;
+    private EnemyCutState MyCutState;
+    private EnemyShootState MyShootState;
 
     private CharacterController MyController;
-    private FSM                 MyFsm;
-    private MechanicManager     PlayerMechanics;
+    private FSM MyFsm;
+    private MechanicManager PlayerMechanics;
 
     private List<MechanicManager.E_MECHANICS> CopiedMechanics;
 
@@ -26,7 +26,6 @@ public class EnemyController : BaseController
     public string Name;
     public int TimesToCopy;
     public bool CanCut;
-
 
     // Use this for initialization
     void Start()
@@ -86,14 +85,14 @@ public class EnemyController : BaseController
         CCondition PatrolToShoot = new CCondition("is_shooting", MyShootState, true, false);
         CCondition ShootToIdle = new CCondition("is_shooting", MyIdleState, false, false);
 
-        MyFsm.AddState("Idle",      MyIdleState);
-        MyFsm.AddState("Patrol",    MyPatrolState);
-        MyFsm.AddState("Chase",     MyChaseState);
-        MyFsm.AddState("Shock",     MyShockState);
-        MyFsm.AddState("Die",       MyDieState);
-        MyFsm.AddState("Cut",       MyCutState);
-        MyFsm.AddState("Dash",      MyDashState);
-        MyFsm.AddState("Shoot",     MyDashState);
+        MyFsm.AddState("Idle", MyIdleState);
+        MyFsm.AddState("Patrol", MyPatrolState);
+        MyFsm.AddState("Chase", MyChaseState);
+        MyFsm.AddState("Shock", MyShockState);
+        MyFsm.AddState("Die", MyDieState);
+        MyFsm.AddState("Cut", MyCutState);
+        MyFsm.AddState("Dash", MyDashState);
+        MyFsm.AddState("Shoot", MyDashState);
 
         MyFsm.AddCondition(MyIdleState, IdleToPatrol);
         MyFsm.AddCondition(MyIdleState, IdleToChase);
@@ -115,8 +114,8 @@ public class EnemyController : BaseController
         MyFsm.AddCondition(MyChaseState, ChaseToShoot);
 
         MyFsm.AddCondition(MyShockState, ShockToChase);
-        MyFsm.AddCondition(MyIdleState, IdleToDieState);
         MyFsm.AddCondition(MyShockState, ShockToDieState);
+
         MyFsm.AddCondition(MyDashState, DashToChase);
 
         MyFsm.AddCondition(MyCutState, CutToChase);
@@ -133,14 +132,7 @@ public class EnemyController : BaseController
             CopiedMechanics.Add(PlayerMechanics.GetMoreUsedMechanic());
         }
 
-        FreezeRemaining -= Time.deltaTime;
-        if (FreezeRemaining < 0)
-        {
-            freezed = false;
-            MoveSpeed = MoveSpeed * SLOW_AMOUNT;
-        }
-
-        if (PlayerMechanics.GetMyMechanics().Length > 1 && CopiedMechanics.Count > 0)
+        if (PlayerMechanics.GetUsefulMechanics() > 1 && CopiedMechanics.Count > 0)
         {
             int RandomIndex = Random.Range(0, CopiedMechanics.Count);
             int RandomValue = Random.Range(0, 10000);
@@ -153,7 +145,10 @@ public class EnemyController : BaseController
                         MyFsm.SetFSMCondition("is_dashing", true);
                         break;
                     case MechanicManager.E_MECHANICS.CUT:
-                        Debug.Log("USing Cut");
+                        if (MyFsm.IsState("Chase"))
+                        {
+                            MyFsm.SetFSMCondition("is_cutting", true);
+                        }
                         break;
                     case MechanicManager.E_MECHANICS.SHOOT:
                         MyFsm.SetFSMCondition("is_shooting", true);
@@ -196,6 +191,14 @@ public class EnemyController : BaseController
         }
     }
 
+    private void OnTriggerExit(Collider col)
+    {
+        GameObject MyParent = col.gameObject.transform.parent.gameObject;
+        if (MyParent.tag == "Player")
+        {
+            CanCut = false;
+        }
+    }
 
     public void DestroyMe(GameObject aToDestroy)
     {
@@ -207,7 +210,7 @@ public class EnemyController : BaseController
         if (hit.gameObject.tag == "Player")
         {
             //If player gets hit. We will steal all his mechanics.
-            for (int i = 0; i <  PlayerMechanics.GetMyMechanics().Length; i++)
+            for (int i = 0; i < PlayerMechanics.GetMyMechanics().Length; i++)
             {
                 if (!CopiedMechanics.Contains(PlayerMechanics.GetMyMechanics()[i]))
                 {
