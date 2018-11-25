@@ -48,11 +48,12 @@ public class MechanicManager : MonoBehaviour
         MyMechanics[(int)E_MECHANICS.DASH]          = E_MECHANICS.DASH;
         MyMechanics[(int)E_MECHANICS.CUT] = E_MECHANICS.CUT;
         ActiveMechanics[0]      = E_MECHANICS.DASH;
-        ActiveMechanics[1]      = E_MECHANICS.CHARGE_TELEPORT;
+        ActiveMechanics[1]      = E_MECHANICS.SHOOT;
         UnlockedMechanics = new List<E_MECHANICS>();
         UnlockedMechanics.Add(E_MECHANICS.DASH);
+        UnlockedMechanics.Add(E_MECHANICS.SHOOT);
         CurrentLeftMechanic     = 0;
-        CurrentRighttMechanic   = 0;
+        CurrentRighttMechanic   = 1;
     }
 	
 	// Update is called once per frame
