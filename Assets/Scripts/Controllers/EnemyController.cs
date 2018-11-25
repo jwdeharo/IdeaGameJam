@@ -78,7 +78,12 @@ public class EnemyController : MonoBehaviour
         GameObject MyParent = col.gameObject.transform.parent.gameObject;
         if (MyParent.tag == "Player")
         {
-            MyFsm.SetFSMCondition("start_chasing", true);
+            MechanicManager PlayerMechanics = MyParent.GetComponent<MechanicManager>();
+
+            if (PlayerMechanics.GetMyMechanics().Length > 1)
+            {
+                MyFsm.SetFSMCondition("start_chasing", true);
+            }
         }
     }
 }
