@@ -8,6 +8,7 @@ public class EnemyChaseState : EnemyBaseState, IState
     private CharacterController MyController;
     private GameObject ThePlayer;
     private EnemyController MyEnemyController;
+    private Animator MyAnimator;
 
     public void OnEnterState()
     {
@@ -30,18 +31,29 @@ public class EnemyChaseState : EnemyBaseState, IState
         {
             MyEnemyController = MyGameObject.GetComponent<EnemyController>();
         }
+
+        if (MyAnimator == null)
+        {
+            MyAnimator = MyGameObject.GetComponent<Animator>();
+        }
+
+        MyAnimator.SetBool("Is_chasing", true);
     }
 
     public void OnExitState()
     {
-
+        MyAnimator.SetBool("Is_chasing", false);
     }
 
     public void UpdateState()
     {
         //We calculate the distance to the target.
         Vector3 DistanceToWaypoint = ThePlayer.transform.position - MyGameObject.transform.position;
-
         MyEnemyController.Move(DistanceToWaypoint);
+
+        if (DistanceToWaypoint.magnitude > 5.0f)
+        {
+            MyFsm.SetFSMCondition("start_chasing", false);
+        }
     }
 }

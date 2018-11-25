@@ -41,6 +41,7 @@ public class EnemyController : MonoBehaviour
         CCondition IdleToChase = new CCondition("start_chasing", MyChaseState, true, false);
         CCondition PatrolToIdle = new CCondition("start_patrol", MyIdleState, false, false);
         CCondition PatrolToChase = new CCondition("start_chasing", MyChaseState, true, false);
+        CCondition ChaseToIdle = new CCondition("start_chasing", MyIdleState, false, false);
 
         MyFsm.AddState("Idle", MyIdleState);
         MyFsm.AddState("Patrol", MyPatrolState);
@@ -50,6 +51,7 @@ public class EnemyController : MonoBehaviour
         MyFsm.AddCondition(MyIdleState, IdleToChase);
         MyFsm.AddCondition(MyPatrolState, PatrolToIdle);
         MyFsm.AddCondition(MyPatrolState, PatrolToChase);
+        MyFsm.AddCondition(MyChaseState, ChaseToIdle);
     }
 
     // Update is called once per frame
