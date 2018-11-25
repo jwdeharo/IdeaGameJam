@@ -81,6 +81,7 @@ public class FSM : MonoBehaviour
             {
                 if (Condition.GetName().Equals(aName) && Condition.GetValue() != aConditionValue)
                 {
+
                     Condition.SetValue(aConditionValue);
                     if (ConditionState == StackOfStates[0])
                     {
