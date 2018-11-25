@@ -198,11 +198,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1590522}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &3806149 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1724429496779514, guid: b9bb8d1fc8cf2554bb599516cc334636,
-    type: 2}
-  m_PrefabInternal: {fileID: 293182777}
 --- !u!1 &20499492
 GameObject:
   m_ObjectHideFlags: 0
@@ -1389,6 +1384,15 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 23494943da78f484c90aaaeb13bd0a2c, type: 2}
+    - target: {fileID: 114674508916831108, guid: 61b624d887de6c14695a24bdd4849b79,
+        type: 2}
+      propertyPath: TimesToCopy
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4526021173649442, guid: 61b624d887de6c14695a24bdd4849b79, type: 2}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 61b624d887de6c14695a24bdd4849b79, type: 2}
   m_IsPrefabAsset: 0
@@ -8790,7 +8794,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 304445309e2e516469f37e2af4ab576e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 3806149}
+  player: {fileID: 2117646929}
   boundary: {fileID: 0}
   speed: 0.1
   distance: {x: 0, y: 0, z: -20}
@@ -10789,6 +10793,11 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 64.8, y: 29.4, z: 0.2}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &2117646929 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1845778534623688, guid: b9bb8d1fc8cf2554bb599516cc334636,
+    type: 2}
+  m_PrefabInternal: {fileID: 293182777}
 --- !u!1 &2120581715
 GameObject:
   m_ObjectHideFlags: 0

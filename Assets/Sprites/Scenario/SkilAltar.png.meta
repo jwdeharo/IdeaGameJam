@@ -1,14 +1,12 @@
 fileFormatVersion: 2
-guid: 301b359e7a7021847b8406aa5266febb
+guid: 2c98119caaa2e3e469393f5bdb898c21
 TextureImporter:
   fileIDToRecycleName:
-    21300000: RObot_Destroy_0
-    21300002: RObot_Destroy_1
-    21300004: RObot_Destroy_2
-    21300006: RObot_Destroy_3
-    21300008: RObot_Destroy_4
-    21300010: RObot_Destroy_5
-    21300012: RObot_Destroy_6
+    21300000: SkilAltar_0
+    21300002: SkilAltar_1
+    21300004: SkilAltar_2
+    21300006: SkilAltar_3
+    21300008: SkilAltar_4
   externalObjects: {}
   serializedVersion: 7
   mipmaps:
@@ -38,7 +36,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: -1
+    filterMode: 0
     aniso: -1
     mipBias: -100
     wrapU: 1
@@ -67,10 +65,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 2
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 8192
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -78,10 +76,21 @@ TextureImporter:
     androidETC2FallbackOverride: 0
   - serializedVersion: 2
     buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 8192
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+  - serializedVersion: 2
+    buildTarget: Android
+    maxTextureSize: 8192
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -91,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: RObot_Destroy_0
+      name: SkilAltar_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 150
-        height: 150
+        width: 115
+        height: 97
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -105,19 +114,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c5f2e30d3a23f5e43872138410bf6caf
+      spriteID: b71f77c0556ccb1458b143389af8baa7
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RObot_Destroy_1
+      name: SkilAltar_1
       rect:
         serializedVersion: 2
-        x: 150
+        x: 115
         y: 0
-        width: 150
-        height: 150
+        width: 115
+        height: 97
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -125,19 +134,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 46e346bbd95f3b74d8207a45960257eb
+      spriteID: bb974cb3575f19649a33229d34443e3d
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RObot_Destroy_2
+      name: SkilAltar_2
       rect:
         serializedVersion: 2
-        x: 300
+        x: 230
         y: 0
-        width: 150
-        height: 150
+        width: 115
+        height: 97
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -145,19 +154,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 13620837bc06c5148ba6bebff88d5ee1
+      spriteID: cb20376a48a1e3c4ba6a70e2ec8417f7
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RObot_Destroy_3
+      name: SkilAltar_3
       rect:
         serializedVersion: 2
-        x: 450
+        x: 345
         y: 0
-        width: 150
-        height: 150
+        width: 115
+        height: 97
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -165,19 +174,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ae3eeb751201cc140a58c3a89da3dcc3
+      spriteID: 294e1a1d571cd784a922386a81dd20bb
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: RObot_Destroy_4
+      name: SkilAltar_4
       rect:
         serializedVersion: 2
-        x: 600
+        x: 460
         y: 0
-        width: 150
-        height: 150
+        width: 115
+        height: 97
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -185,47 +194,7 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9893e6c3429062842af8a7732a6afc32
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: RObot_Destroy_5
-      rect:
-        serializedVersion: 2
-        x: 750
-        y: 0
-        width: 150
-        height: 150
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4d71340de0a82bb48acd6be054e32a6c
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: RObot_Destroy_6
-      rect:
-        serializedVersion: 2
-        x: 900
-        y: 0
-        width: 150
-        height: 150
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b9caeabe9e9841d4b8d1ca34273e57b7
+      spriteID: 469749ace3842764ca2bd214c033546e
       vertices: []
       indices: 
       edges: []
@@ -233,7 +202,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: d20989078589363449b19a0dea526ba4
+    spriteID: 23d8ab4a30e9de3448a193b43a36827e
     vertices: []
     indices: 
     edges: []
