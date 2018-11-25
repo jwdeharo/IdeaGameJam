@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
+    public static readonly float SLOW_AMOUNT = 3;
 
     private EnemyIdleState MyIdleState;
     private EnemyPatrolState MyPatrolState;
@@ -82,7 +83,7 @@ public class EnemyController : MonoBehaviour
             if(FreezeRemaining < 0)
             {
                 freezed = false;
-                MoveSpeed = MoveSpeed * 2;
+                MoveSpeed = MoveSpeed * SLOW_AMOUNT;
             }
         }
 
@@ -120,7 +121,7 @@ public class EnemyController : MonoBehaviour
         if (!freezed)
         {
             freezed = true;
-            MoveSpeed = MoveSpeed / 2;
+            MoveSpeed = MoveSpeed / SLOW_AMOUNT;
         }
         FreezeRemaining = timeOfFreeze;
 
