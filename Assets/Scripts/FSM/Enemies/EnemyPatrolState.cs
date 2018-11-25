@@ -9,7 +9,7 @@ public class EnemyPatrolState : EnemyBaseState, IState
     private int InitWayPoint;
     private EnemyController MyEnemyController;
     private FSM MyFsm;
-
+    private float MoveSpeed;
     private bool HasStartedThePatrol;
 
     public void OnEnterState()
@@ -19,41 +19,39 @@ public class EnemyPatrolState : EnemyBaseState, IState
         WayPointIndex = Random.Range(0, Waypoints.Count);
         InitWayPoint = WayPointIndex;
         HasStartedThePatrol = false;
+        MoveSpeed = MyEnemyController.GetMoveSpeed();
     }
 
     public void OnExitState()
     {
-
+        MoveSpeed = MyEnemyController.GetMoveSpeed();
+        HasStartedThePatrol = false;
+        MyFsm.PopState();
     }
 
     public void UpdateState()
     {
         Vector3 CurrentWaypoint = Waypoints[WayPointIndex];
         Vector3 DistanceToWaypoint = CurrentWaypoint - MyGameObject.transform.position;
-        float MoveSpeed = MyEnemyController.GetMoveSpeed();
-        while (MoveSpeed > 0.0f)
+
+        if (DistanceToWaypoint.sqrMagnitude > (MoveSpeed * MoveSpeed))
         {
-            if (DistanceToWaypoint.sqrMagnitude > (MoveSpeed * MoveSpeed))
+            DistanceToWaypoint.Normalize();
+            DistanceToWaypoint.z = 0.0f;
+            MyEnemyController.Move(DistanceToWaypoint);
+        }
+        else
+        {
+            if (WayPointIndex < Waypoints.Count - 1)
             {
-                DistanceToWaypoint.Normalize();
-                DistanceToWaypoint.z = 0.0f;
-                MyEnemyController.Move(DistanceToWaypoint);
-                MoveSpeed = 0.0f;
+                ++WayPointIndex;
             }
             else
             {
-                MoveSpeed -= DistanceToWaypoint.magnitude;
-                if (WayPointIndex < Waypoints.Count - 1)
-                {
-                    ++WayPointIndex;
-                }
-                else
-                {
-                    WayPointIndex = 0;
-                }
-
-                HasStartedThePatrol = true;
+                WayPointIndex = 0;
             }
+
+            HasStartedThePatrol = true;
         }
 
         if (HasStartedThePatrol && InitWayPoint == WayPointIndex)
