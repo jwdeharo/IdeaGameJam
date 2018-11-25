@@ -59,6 +59,7 @@ public class EnemyChaseState : EnemyBaseState, IState
         Vector3 DistanceToWaypoint = ThePlayer.transform.position - MyGameObject.transform.position;
         MyEnemyController.Move(DistanceToWaypoint);
         MechanicManager PlayerMechanics = ThePlayer.GetComponent<MechanicManager>();
+        FSM PlayerFSM = ThePlayer.GetComponent<FSM>();
         if (DistanceToWaypoint.magnitude > 7.0f || PlayerMechanics.GetUsefulMechanics() <= 1)
         {
             MyFsm.SetFSMCondition("start_chasing", false);
@@ -66,7 +67,7 @@ public class EnemyChaseState : EnemyBaseState, IState
         else if (DistanceToWaypoint.magnitude < 1.0f)
         {
             int RandomValue = Random.Range(0, 1000);
-            if (RandomValue > 1 && RandomValue < 10)
+            if (RandomValue > 1 && RandomValue < 950 && !PlayerFSM.IsState("Stunned"))
             {
                 IsShocking = true;
                 MyFsm.SetFSMCondition("start_shock", true);
