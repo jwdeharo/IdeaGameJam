@@ -10,10 +10,7 @@ public class MechanicManager : MonoBehaviour
     public enum E_MECHANICS: int
     {
         DASH = 0,
-        CUT ,
-        CHARGE_TELEPORT ,
-        SHOOT,
-        SHOOT_SLOW,
+        CUT,
 
         NONE_MECHANIC,
 
@@ -43,10 +40,9 @@ public class MechanicManager : MonoBehaviour
 
         ActiveMechanics         = new E_MECHANICS[2];
         ActiveMechanics[0]      = E_MECHANICS.DASH;
-        ActiveMechanics[1]      = E_MECHANICS.SHOOT;
+        ActiveMechanics[1]      = E_MECHANICS.NONE_MECHANIC;
 
         UnlockedMechanics[(int)E_MECHANICS.DASH] = E_MECHANICS.DASH;
-        UnlockedMechanics[(int)E_MECHANICS.SHOOT] = E_MECHANICS.SHOOT;
 
         CurrentLeftMechanic     = 0;
         CurrentRighttMechanic   = 1;

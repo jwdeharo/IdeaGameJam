@@ -10,20 +10,18 @@ public class PlayerController : BaseController
     //My finite state machine.
     private FSM MyFsmMachine;
     //Character controller that will help us to move and detect collisions.
-    private CharacterController MyController;
+    private Rigidbody2D MyRigidBody;
 
     private IdleState MyIdleState;
     private MoveState MyMoveState;
     private DashState MyDashState;
     private CutState MyCutState;
-    private TeleportingState MyTeleportState;
-    private ShootingState MyShootingState;
-    private ShootingState MyShootingStateSlow;
     private StunnedState MyStunnedState;
 
     private Vector3 MyDirection;
     private MechanicManager MyMechanicManager;
     private GameObject ToCut;
+
     private bool FacingRight;
     private bool CanCutEnemy;
     private float SensibilityTrigger;
@@ -37,7 +35,7 @@ public class PlayerController : BaseController
     // Use this for initialization
     void Start()
     {
-        MyController = GetComponent<CharacterController>();
+        MyRigidBody = GetComponent<Rigidbody2D>();
         MyFsmMachine = GetComponent<FSM>();
         MyAnimator = GetComponent<Animator>();
         MyMechanicManager = GetComponent<MechanicManager>();
@@ -47,9 +45,6 @@ public class PlayerController : BaseController
         MyMoveState = new MoveState();
         MyDashState = new DashState();
         MyCutState = new CutState();
-        MyTeleportState = new TeleportingState();
-        MyShootingState = new ShootingState((GameObject)Resources.Load("Projectile"), "is_shooting");
-        MyShootingStateSlow = new ShootingState((GameObject)Resources.Load("ProjectileSlow"), "is_shootingSlow");
         MyStunnedState = new StunnedState();
 
         //We define conditions to change between states here.
@@ -62,17 +57,6 @@ public class PlayerController : BaseController
         CCondition CutToIdle = new CCondition("is_cutting", MyIdleState, false, false);
         CCondition CutToMove = new CCondition("is_cutting", MyMoveState, false, false);
         CCondition MoveToCut = new CCondition("is_cutting", MyCutState, true, false);
-        CCondition IdleToTP = new CCondition("is_tping", MyTeleportState, true, false);
-        CCondition TPToIdle = new CCondition("is_tping", MyIdleState, false, false);
-        CCondition MoveToTp = new CCondition("is_tping", MyTeleportState, true, false);
-        CCondition IdleToShoot = new CCondition("is_shooting", MyShootingState, true, false);
-        CCondition ShootToIdle = new CCondition("is_shooting", MyIdleState, false, false);
-        CCondition MoveToShoot = new CCondition("is_shooting", MyShootingState, true, false);
-        CCondition ShootToMove = new CCondition("is_shooting", MyShootingState, true, false);
-        CCondition IdleToShootSlow = new CCondition("is_shootingSlow", MyShootingStateSlow, true, false);
-        CCondition ShootSlowToIdle = new CCondition("is_shootingSlow", MyIdleState, false, false);
-        CCondition MoveToShootSlow = new CCondition("is_shootingSlow", MyShootingStateSlow, true, false);
-        CCondition ShootSlowToMove = new CCondition("is_shootingSlow", MyMoveState, false, false);
         CCondition IdleToStunned = new CCondition("is_stunned", MyStunnedState, true, false);
         CCondition MoveToStunned = new CCondition("is_stunned", MyStunnedState, true, false);
         CCondition CutToStunned = new CCondition("is_stunned", MyStunnedState, true, false);
@@ -83,36 +67,23 @@ public class PlayerController : BaseController
         MyFsmMachine.AddState("Dash", MyDashState);
         MyFsmMachine.AddState("Cut", MyCutState);
         MyFsmMachine.AddState("Stunned", MyStunnedState);
-        MyFsmMachine.AddState("TP", MyTeleportState);
-        MyFsmMachine.AddState("Shoot", MyShootingState);
-        MyFsmMachine.AddState("ShootSlow", MyShootingStateSlow);
 
         //This relates the states with their conditions.
         MyFsmMachine.AddCondition(MyIdleState, IdleToMove);
         MyFsmMachine.AddCondition(MyIdleState, IdleToDash);
         MyFsmMachine.AddCondition(MyIdleState, IdleToCut);
         MyFsmMachine.AddCondition(MyIdleState, IdleToStunned);
-        MyFsmMachine.AddCondition(MyIdleState, IdleToShootSlow);
-        MyFsmMachine.AddCondition(MyIdleState, IdleToShoot);
 
         MyFsmMachine.AddCondition(MyMoveState, MoveToIdle);
         MyFsmMachine.AddCondition(MyMoveState, MoveToDash);
         MyFsmMachine.AddCondition(MyMoveState, MoveToCut);
         MyFsmMachine.AddCondition(MyMoveState, MoveToStunned);
-        MyFsmMachine.AddCondition(MyMoveState, MoveToShootSlow);
-        MyFsmMachine.AddCondition(MyMoveState, MoveToShoot);
 
         MyFsmMachine.AddCondition(MyDashState, DashToIdle);
         MyFsmMachine.AddCondition(MyCutState, CutToIdle);
         MyFsmMachine.AddCondition(MyStunnedState, StunnedToIdle);
 
-        MyFsmMachine.AddCondition(MyShootingStateSlow, ShootSlowToIdle);
-        MyFsmMachine.AddCondition(MyShootingStateSlow, ShootSlowToMove);
-
         MyFsmMachine.AddCondition(MyCutState, CutToStunned);
-
-        MyFsmMachine.AddCondition(MyShootingState, ShootToIdle);
-        MyFsmMachine.AddCondition(MyShootingState, ShootToMove);
 
         MyDirection = Vector3.zero;
         FacingRight = true;
@@ -126,7 +97,6 @@ public class PlayerController : BaseController
     {
         if (DataManager.CurrentMechanic != MechanicManager.E_MECHANICS.NONE_MECHANIC)
         {
-            Debug.Log(DataManager.CurrentMechanic);
             MyMechanicManager.UnlockMechanic(DataManager.CurrentMechanic);
             DataManager.CurrentMechanic = MechanicManager.E_MECHANICS.NONE_MECHANIC;
         }
@@ -172,6 +142,7 @@ public class PlayerController : BaseController
         {
             InputManager.ChangeMechanic(ref SensibilityTrigger);
         }
+
     }
 
     private void ActivateMechanic(int aMechanicIndex)
@@ -181,7 +152,7 @@ public class PlayerController : BaseController
         switch (MyMechanicManager.GetMyMechanics()[aMechanicIndex])
         {
             case MechanicManager.E_MECHANICS.DASH:
-
+                Debug.Log("DAASH");
                 MyFsmMachine.SetFSMCondition("is_dashing", true);
                 break;
             case MechanicManager.E_MECHANICS.CUT:
@@ -196,15 +167,6 @@ public class PlayerController : BaseController
                     }
                 }
                 break;
-            case MechanicManager.E_MECHANICS.CHARGE_TELEPORT:
-                MyFsmMachine.SetFSMCondition("is_tping", true);
-                break;
-            case MechanicManager.E_MECHANICS.SHOOT:
-                MyFsmMachine.SetFSMCondition("is_shooting", true);
-                break;
-            case MechanicManager.E_MECHANICS.SHOOT_SLOW:
-                MyFsmMachine.SetFSMCondition("is_shootingSlow", true);
-                break;
         }
     }
 
@@ -213,7 +175,7 @@ public class PlayerController : BaseController
     {
         //This should do the trick.
         float MovementSpeed = 0.0f;
-
+        Vector2 NewMovement = new Vector2(aMovement.x, aMovement.y);
         MovementSpeed = aMovement.x != 0 ? aMovement.x : aMovement.y;
 
         float MoveSpeedWithDash = MoveSpeed;
@@ -227,7 +189,7 @@ public class PlayerController : BaseController
             MoveSpeedWithDash = 1.0f;
         }
 
-        MyController.Move(aMovement * Time.deltaTime * MoveSpeedWithDash);
+        transform.Translate(NewMovement * Time.deltaTime * MoveSpeedWithDash);
 
         Flip((aMovement).normalized.x);
     }

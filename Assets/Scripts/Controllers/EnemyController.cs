@@ -150,9 +150,6 @@ public class EnemyController : BaseController
                             MyFsm.SetFSMCondition("is_cutting", true);
                         }
                         break;
-                    case MechanicManager.E_MECHANICS.SHOOT:
-                        MyFsm.SetFSMCondition("is_shooting", true);
-                        break;
                 }
             }
         }
