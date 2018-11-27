@@ -8,10 +8,7 @@ public class Bullet : MonoBehaviour {
     public Vector2 direction;
     public GameObject Source;
     public string Destination;
-	// Use this for initialization
-	void Start () {
-		
-	}
+	
 	
 	// Update is called once per frame
 	void Update () {
