@@ -4,27 +4,46 @@ using UnityEngine;
 
 public class DoorController : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public Transform player;
 
-    private void OnCollisionEnter(Collision collision)
+    private void Update()
     {
-        print("player " + collision.gameObject);
-        Animator anim = gameObject.GetComponentInParent<Animator>();
-        anim.SetBool("open", true);
+        DoorLayerPosition();
     }
 
-    private void OnControllerColliderHit(ControllerColliderHit hit)
+    private void DoorLayerPosition()
     {
-        print("player " + hit.gameObject);
-        Animator anim = gameObject.GetComponentInParent<Animator>();
-        anim.SetBool("open", true);
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        SpriteRenderer player_sr = player.GetComponent<SpriteRenderer>();
+        if (player.position.y > transform.position.y)
+        {
+            sr.sortingOrder = player_sr.sortingOrder + 1;
+        }
+        else
+        {
+            sr.sortingOrder = player_sr.sortingOrder - 1;
+        }
+
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Player")
+        {
+            print("player entra");
+            Animator anim = GetComponent<Animator>();
+            anim.SetBool("open", true);
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.tag == "Player")
+        {
+            print("player sale");
+            Animator anim = GetComponent<Animator>();
+            anim.SetBool("open", false);
+        }
+    }
+
+
 }
