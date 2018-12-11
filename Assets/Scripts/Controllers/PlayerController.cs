@@ -79,8 +79,7 @@ public class PlayerController : BaseController
         MyFsmMachine.AddCondition(MyIdleState, IdleToDash);
         MyFsmMachine.AddCondition(MyIdleState, IdleToCut);
         MyFsmMachine.AddCondition(MyIdleState, IdleToStunned);
-        //MyFsmMachine.AddCondition(MyIdleState, IdleToShoot);
-        
+
         MyFsmMachine.AddCondition(MyMoveState, MoveToIdle);
         MyFsmMachine.AddCondition(MyMoveState, MoveToDash);
         MyFsmMachine.AddCondition(MyMoveState, MoveToCut);
@@ -266,4 +265,6 @@ public class PlayerController : BaseController
 }
 
 
+        
+        //MyFsmMachine.AddCondition(MyIdleState, IdleToShoot);
         
