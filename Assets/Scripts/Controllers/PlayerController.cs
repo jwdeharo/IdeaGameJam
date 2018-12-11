@@ -46,10 +46,15 @@ public class PlayerController : BaseController
         MyDashState = new DashState();
         MyCutState = new CutState();
         MyStunnedState = new StunnedState();
-
+        //MyShootState = new ShootState();
         //We define conditions to change between states here.
+        
         CCondition IdleToMove = new CCondition("is_moving", MyMoveState, true, false);
         CCondition MoveToIdle = new CCondition("is_moving", MyIdleState, false, false);
+
+        //CCondition IdleToShoot = new CCondition("is_shooting", MyShootState, true, false);
+        //CCondition ShootToIdle = new CCondition("is_shooting", MyIdleState, false, false);
+
         CCondition IdleToDash = new CCondition("is_dashing", MyDashState, true, false);
         CCondition DashToIdle = new CCondition("is_dashing", MyIdleState, false, false);
         CCondition MoveToDash = new CCondition("is_dashing", MyDashState, true, false);
@@ -67,13 +72,15 @@ public class PlayerController : BaseController
         MyFsmMachine.AddState("Dash", MyDashState);
         MyFsmMachine.AddState("Cut", MyCutState);
         MyFsmMachine.AddState("Stunned", MyStunnedState);
+        //MyFsmMachine.AddState("Shoot", MyShootState);
 
         //This relates the states with their conditions.
         MyFsmMachine.AddCondition(MyIdleState, IdleToMove);
         MyFsmMachine.AddCondition(MyIdleState, IdleToDash);
         MyFsmMachine.AddCondition(MyIdleState, IdleToCut);
         MyFsmMachine.AddCondition(MyIdleState, IdleToStunned);
-
+        //MyFsmMachine.AddCondition(MyIdleState, IdleToShoot);
+        
         MyFsmMachine.AddCondition(MyMoveState, MoveToIdle);
         MyFsmMachine.AddCondition(MyMoveState, MoveToDash);
         MyFsmMachine.AddCondition(MyMoveState, MoveToCut);
@@ -111,6 +118,7 @@ public class PlayerController : BaseController
             MyFsmMachine.SetFSMCondition("is_moving", false);
         }
 
+        //MyFsmMachine.SetFSMCondition("is_shooting", true);
 
         if (InputManager.FirstMechanicPressed())
         {
