@@ -74,6 +74,8 @@ public class PlayerController : BaseController
         MyFsmMachine.AddCondition(MyIdleState, IdleToCut);
         MyFsmMachine.AddCondition(MyIdleState, IdleToStunned);
 
+        MyFsmMachine.AddCondition(MyIdleState, IdleToStunned);
+
         MyFsmMachine.AddCondition(MyMoveState, MoveToIdle);
         MyFsmMachine.AddCondition(MyMoveState, MoveToDash);
         MyFsmMachine.AddCondition(MyMoveState, MoveToCut);
