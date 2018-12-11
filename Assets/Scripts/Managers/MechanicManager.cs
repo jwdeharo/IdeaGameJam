@@ -40,9 +40,10 @@ public class MechanicManager : MonoBehaviour
 
         ActiveMechanics         = new E_MECHANICS[2];
         ActiveMechanics[0]      = E_MECHANICS.DASH;
-        ActiveMechanics[1]      = E_MECHANICS.NONE_MECHANIC;
+        ActiveMechanics[1]      = E_MECHANICS.CUT;
 
         UnlockedMechanics[(int)E_MECHANICS.DASH] = E_MECHANICS.DASH;
+        UnlockedMechanics[(int)E_MECHANICS.CUT] = E_MECHANICS.CUT;
 
         CurrentLeftMechanic     = 0;
         CurrentRighttMechanic   = 1;
