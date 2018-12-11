@@ -263,8 +263,3 @@ public class PlayerController : BaseController
         return ToCut;
     }
 }
-
-
-        
-        //MyFsmMachine.AddCondition(MyIdleState, IdleToShoot);
-        
